@@ -1,20 +1,20 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { FormEvent } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { ethers } from "ethers";
 
 
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};
 //   let htmlType = "text";
-
+//
 //   if(type=="uint256") {htmlType = "number";}
-
+//
 //   if(type=="address") {
 //     options["minlength"]=42
 //     options["maxlength"]=42
 //   }
-
+//
 //   return <div className='formInput'>
 //     {/* {options.map((k) => {
 //       return (k);
@@ -38,7 +38,8 @@ declare global {
 
 
 export default function Contract() {
-  const { chain, address } = useParams();
+  const { chain, contractAddress } = useParams();
+  const [address, setAddress] = useState();
 
   const gregTokenAbiAsString = `{
     "_format": "hh-sol-artifact-1",
@@ -328,7 +329,6 @@ export default function Contract() {
   }`;
   
   let abi = JSON.parse(gregTokenAbiAsString);
-  let contractAddress = "0x04f5FBcCfC5C5ca62C84Cc5Bb71bD99a6cA43874";
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
   let contract = new ethers.Contract(contractAddress, abi.abi, provider);
   // console.log(contract);
@@ -393,7 +393,7 @@ export default function Contract() {
   return (
     <div>
       <h1>Contract</h1>
-      <h2>Chain: {chain}, Address: {address}</h2>
+      <h2>Chain: {chain}, Address: {contractAddress}</h2>
       <div className='container'>
           <div className='header'>
             <label>{abi.contractName}</label>

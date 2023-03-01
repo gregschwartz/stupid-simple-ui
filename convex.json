@@ -1,0 +1,7 @@
+{
+  "project": "simplestupidui",
+  "team": "gregschwartz",
+  "prodUrl": "https://grateful-capybara-946.convex.cloud",
+  "functions": "src/convex/",
+  "authInfo": []
+}
