@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormEvent } from 'react'
 import { ethers } from "ethers";
-import { useQuery, useMutation } from '../convex/_generated/react';
+import { useMutation } from '../convex/_generated/react';
 
 export default function Home() {
   //wrap the db function
@@ -50,7 +50,7 @@ export default function Home() {
       contractCode,
       0 //times it has been viewed
     );
-    console.log("db insert response", response);
+
     if(response !== undefined && response.id && response.tableName) {
       //TODO: send to a sexy "building UI" screen instead
       window.location.pathname=`/contracts/${blockchainName}/${contractAddress}`;

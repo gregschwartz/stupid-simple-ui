@@ -8,7 +8,7 @@ export default defineSchema({
     contractAbi: s.any(),
     contractAddress: s.string(),
     contractCode: s.string(),
-    timesLoaded: s.number()
+    numViews: s.number()
   })
   .index("by_owner_address", ["chainName", "ownerAddress"])
   .index("by_contract_address", ["chainName", "contractAddress"])
