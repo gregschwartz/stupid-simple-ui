@@ -2,21 +2,20 @@
 
 Automatically generate and host a front-end for any Solidity contract!
 
-## Set Up
+## Set Up And Start
 
-Create `.env.local` with:
-````
-REACT_APP_ALCHEMY_API_KEY=
-REACT_APP_ALCHEMY_URL=
-REACT_APP_CONVEX_URL=
-````
+1. Run `npm install` to get the packages.
 
-## Run: `npm run start`
+2. Create `.env.local` with:
+  ````
+  REACT_APP_ALCHEMY_API_KEY=
+  REACT_APP_ALCHEMY_URL=
+  REACT_APP_CONVEX_URL=
+  ````
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. Run: `npm run start`. This starts the server and the Convex database system at the same time, using `concurrently`.
 
-Also runs the Convex database system at the same time, using `concurrently`.
+  It will open [http://localhost:3000](http://localhost:3000), but you can load it manually if need be.
 
 ## Building On Vercel
 Command should be `npm run prodBuild`
