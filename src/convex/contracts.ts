@@ -1,7 +1,7 @@
 import { mutation, query } from './_generated/server';
 
 export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, timesLoaded) => {
-  await db.insert('contracts', {
+  return await db.insert('contracts', {
     name,
     chainName,
     ownerAddress,
