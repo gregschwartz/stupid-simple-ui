@@ -19,7 +19,10 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <h1>Stupid Simple UI</h1>
         <nav>
-          <a href="/contracts/goerli/0x04f5FBcCfC5C5ca62C84Cc5Bb71bD99a6cA43874">Greg Token</a>
+          <i>Examples: </i>
+          <a href="/contracts/goerli/0xcaFAa9C9662f2a7EaeceD891C039317035286540">EscrowOOO</a>
+          {" | "}
+          <a href="/contracts/goerli/0xa4e4745a1066ac0faebe4e005793b172c69cc9c4">Greg Token</a>
         </nav>
       </header>
       <div className='main'>
