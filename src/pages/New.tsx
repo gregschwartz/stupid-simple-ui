@@ -22,30 +22,41 @@ export default function Home() {
 
     //from form
     const form = event.target as HTMLFormElement;
-    const abi = form.contractAbi.value as string;
+    const abiAsString = form.contractAbi.value as string;
     const contractAddress = form.contractAddress.value as string;
     const contractCode = "contract code here coming soon";
 
-    if(!abi || !contractAddress){
+    if(!abiAsString || !contractAddress){
       //show error
       showError("Please provide address and ABI");
       return;
     }
 
-    const abiAsJson = JSON.parse(abi);
-    if(abiAsJson["abi"].count <= 0) {
+    let abiAsJson = {};
+    try {
+      abiAsJson = JSON.parse(abiAsString);
+    } catch (exception) {
+      console.log("Exception converting ABI to JSON", exception);
+      //below check will catch that the ABI is empty, so just drop through
+    }
+
+    if(abiAsJson["abi"] === undefined || abiAsJson["abi"]?.length === 0) {
       showError("ABI is not valid, please make sure you're copy and pasting it correctly. Particularly make sure it includes the subsection `abi` array.");
       return;
     }
 
     //parse the name from the ABI
-    const contractName = (abiAsJson["contractName"].length <= 0 ? abiAsJson["contractName"] : contractAddress);
+    const contractName = (abiAsJson["contractName"]?.length > 0 ? abiAsJson["contractName"] : contractAddress);
+
+    //remove the big chunks of data from the JSON, so it doesn't hit Convex's storage limit
+    abiAsJson["bytecode"] = "removed";
+    abiAsJson["deployedBytecode"] = "removed";
 
     const response = await addFunction(
       contractName,
       blockchainName,
       ownerAddress,
-      abi,
+      JSON.stringify(abiAsJson),
       contractAddress,
       contractCode,
       0 //times it has been viewed
