@@ -17,5 +17,22 @@
 
   .container {
     display: flex;
+    flex-flow: wrap;
+    align-items: center;
     justify-content: center;
+    width: 100%;
+    align-content: center;
   }
+
+.checkListItem{
+  display: flex;
+  justify-content: start;
+}
+
+.unvisible {
+    display: none;
+}
+
+.visible {
+    display:block;
+}
