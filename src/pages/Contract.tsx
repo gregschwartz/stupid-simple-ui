@@ -74,17 +74,49 @@ export default function Contract() {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    setAddress(await signer.getAddress());
+    const walletAddress = await signer.getAddress();
+    setAddress(walletAddress);
+    console.log(`connectWallet address '${walletAddress}'`);
     return contract.connect(signer);
   };
 
-  function showResult(form: HTMLFormElement, message: string) {
+  function showResult(form: HTMLFormElement, result: any) {
     let responseCells = form.getElementsByClassName("responseCell");
     if(responseCells.length > 0) {
       let cell = responseCells[0] as HTMLDivElement;
-      cell.innerHTML = message;
+      var html;
+
+      console.log(result);
+
+      //check if it is a transaction in-progress hash instead of data
+      if(Array.isArray(result)) {
+        html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+          result.forEach((element,index) => {
+            html += `<tr>
+              <td>${index}</td>
+              <td>${element}</td>
+            </tr>`;
+          });
+
+          html += `</tbody>
+        </table>`;
+
+      } else {
+        html = result;
+      }
+      
+      cell.innerHTML = html;
     } else {
-      alert("Cannot find where to show result, which is: " + message);
+      alert("Cannot find where to show result, which is: " + result);
     }
   }
 
