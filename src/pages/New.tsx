@@ -3,10 +3,8 @@ import React, { useState } from 'react';
 import { FormEvent } from 'react'
 import { useMutation } from '../convex/_generated/react';
 import { Web3Button } from "@web3modal/react";
-import { useWeb3Modal } from "@web3modal/react";
-import { useAccount, useConnect, useEnsName, useNetwork } from 'wagmi';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import CoolRedirect  from '../components/coolRedirect/CoolRedirect';
+import { useAccount, useEnsName, useNetwork } from 'wagmi';
+import CoolRedirect from '../components/coolRedirect/CoolRedirect';
 
 export default function Home() {
   //wrap the db function
@@ -14,7 +12,7 @@ export default function Home() {
 
   //wagmi for wallet interactions
   const { address, isConnected } = useAccount();
-  const { chain, chains } = useNetwork()
+  const { chain } = useNetwork()
   const { data: ensName } = useEnsName({ address });
 
   //statuses

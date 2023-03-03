@@ -39,7 +39,7 @@ declare global {
 
 export default function Contract() {
   const { chain, contractAddress } = useParams();
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState("");
 
   // const incrementNumViews = useMutation("contracts:incrementNumViews");
   const result = useQuery("contracts:getBy", chain, contractAddress);
@@ -68,15 +68,14 @@ export default function Contract() {
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
   let contract = new ethers.Contract(contractAddress, abi.abi, provider);
-  // console.log("contract", contract);
+
   
   const connectWallet = async () => {
-    const provider = new ethers.BrowserProvider(window.ethereum, "any");
+    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
-    const signer = await provider.getSigner();
-    console.log("Account:", await signer.getAddress());
-    contract.connect(signer);
-    console.log("connected with that account");
+    const signer = provider.getSigner();
+    setAddress(await signer.getAddress());
+    return contract.connect(signer);
   };
 
   function showResult(form: HTMLFormElement, message: string) {
@@ -92,7 +91,6 @@ export default function Contract() {
   const handleSubmit = async (event: FormEvent) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
-    
 
     const form = event.target as HTMLFormElement;
     console.log("call contract's method: ", form.name);
@@ -106,9 +104,13 @@ export default function Contract() {
     console.log("with these parameters", params);
 
     try {
-      let result = await contract[`${form.name}`](...params);
-      console.log("result", result);
-      showResult(form, result);
+      const connectedContract = await connectWallet();
+      await connectedContract[`${form.name}`](...params)
+        .then((result) => {
+          // Returns signed transaction
+          console.log("call finished", result);
+          showResult(form, result);
+        });
     } catch(x) {
       console.log("caught", x);
 
@@ -116,6 +118,8 @@ export default function Contract() {
 
       if(x.reason === "sending a transaction requires a signer") {
         reason = "Please click Connect Wallet at the top of the screen.";
+      } else if(x.reason === "execution reverted") {
+        reason = "Reverted Without Reason: you either don't have access, or your parameters aren't valid.";
       } else {
         reason = (x.reason !== undefined ? x.reason : (
           x.message !== undefined ? x.message : x
@@ -135,8 +139,8 @@ export default function Contract() {
       <h1>{contractName}</h1>
       <div className='container'>
         <div className='header'>
-          {/* {record.numViews} views <br /> */}
-          <button id="connectWallet" onClick={connectWallet}>Connect Wallet</button>
+          {!address && <button id="connectWallet" onClick={connectWallet}>Connect Wallet</button>}
+          {address && <div>Address: {address}</div>}
         </div>
 
         <div className='formSection'>
@@ -191,6 +195,17 @@ export default function Contract() {
                     </div>
                   );
                 })}
+
+                {functionOrObject.outputs.length === 0 &&
+                    <div className='formRow response'>
+                      <div className='formLabel'>
+                        <></>
+                      </div>
+                      <div className='formInput responseCell'>
+                        Returns a value
+                      </div>
+                    </div>
+                }
               </form>
             );
           })}
