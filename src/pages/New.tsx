@@ -6,6 +6,7 @@ import { Web3Button } from "@web3modal/react";
 import { useWeb3Modal } from "@web3modal/react";
 import { useAccount, useConnect, useEnsName, useNetwork } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+import CoolRedirect  from '../components/coolRedirect/CoolRedirect';
 
 export default function Home() {
   //wrap the db function
@@ -16,10 +17,17 @@ export default function Home() {
   const { chain, chains } = useNetwork()
   const { data: ensName } = useEnsName({ address });
   const [isWritingToDb, setIsWritingToDb] = useState(false);
+  const [isRedirecting, setIRedirecting] = useState(false);
  
   const showError = async (text: String) => {
     alert(text);
   };
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+    });
+  }
 
   const handleSubmit = async (event: FormEvent) => {
     // Stop the form from submitting and refreshing the page.
@@ -89,6 +97,8 @@ export default function Home() {
       clearTimeout(failureTimer);
 
       //TODO: send to a sexy "building UI" screen instead
+      setIRedirecting(true);
+      await wait(10000);
       window.location.pathname=`/contracts/${blockchainName}/${contractAddress}`;
       setIsWritingToDb(false);
     }
@@ -123,6 +133,7 @@ address public ...`;
 
 
   return (
+    isRedirecting? <CoolRedirect /> :
     <div className='container'>
       <h1>Host My Contract</h1>
 
