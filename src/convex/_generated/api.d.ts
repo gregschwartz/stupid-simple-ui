@@ -11,6 +11,7 @@
 
 import type { ApiFromModules } from "convex/api";
 import type * as contracts from "../contracts";
+import type * as themes from "../themes";
 
 /**
  * A type describing your app's public Convex API.
@@ -23,4 +24,5 @@ import type * as contracts from "../contracts";
  */
 export type API = ApiFromModules<{
   contracts: typeof contracts;
+  themes: typeof themes;
 }>;
