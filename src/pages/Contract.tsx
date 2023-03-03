@@ -154,7 +154,7 @@ export default function Contract() {
                 {(functionOrObject.stateMutability === "payable" ? (
                   <div className='addressSection formRow'>
                     <div className='formLabel'>
-                      <label htmlFor="contractAddres">boldAmount</label> 
+                      <label htmlFor="contractAddres">Amount</label> 
                     </div>
                     {/* <Field name="Amount" type="uint256" internalType="uint256" /> */}
                     <input type="number" id="amount" name="amount" className='amount' required />   
