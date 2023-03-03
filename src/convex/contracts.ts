@@ -1,6 +1,6 @@
 import { mutation, query } from './_generated/server';
 
-export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, numViews) => {
+export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, themeId, numViews) => {
   return await db.insert('contracts', {
     name,
     chainName,
@@ -8,6 +8,7 @@ export const add = mutation(async ({ db }, name, chainName, ownerAddress, contra
     contractAbi,
     contractAddress,
     contractCode,
+    themeId,
     numViews
   });
 });
@@ -23,11 +24,11 @@ export const getBy = query(async ({ db }, chainName: string, contractAddress: st
   .collect();
 }); 
 
-export const incrementNumViews = mutation(async ({ db }, documentId) => {
-  const record = await db.get(documentId);
-  const number = (record.numViews > 0 ? record.numViews : 0) + 1;
-  return await db.patch(documentId, { numViews: number });
-});
+// export const incrementNumViews = mutation(async ({ db }, documentId) => {
+//   const record = await db.get(documentId);
+//   const number = (record.numViews > 0 ? record.numViews : 0) + 1;
+//   return await db.patch(documentId, { numViews: number });
+// });
 
 export const get = query(async ({ db }) => {
   return await db.query('contracts').collect();
