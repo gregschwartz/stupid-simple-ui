@@ -34,7 +34,9 @@ function App() {
             <Routes>
               <Route path='/' element={<New />} />
               <Route path='contracts/:chain/:contractAddress' element={<Contract />} />
-              <Route path='/themes' element={<ThemeEditor />} />
+              <Route path='themes' element={<ThemeEditor />} />
+              <Route path='themes:themeId' element={<ThemeEditor />} />
+              <Route path='themes/new' element={<ThemeEditor />} />
             </Routes>
           </BrowserRouter>
         </ConvexProvider>
