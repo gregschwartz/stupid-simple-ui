@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
+//deployed to 0x0A9009c166Cdc12F4b44e2F16e4baBFC2eC770FC
+
 contract Faucet {
   address payable public owner;
 
@@ -12,7 +14,7 @@ contract Faucet {
     return address(this).balance;
   }
   
-  function withdraw(uint _amount) payable public {
+  function withdraw(uint _amount) public {
     // users can only withdraw .1 ETH at a time, feel free to change this!
     require(_amount <= 100000000000000000, "Amount must be 0.1 ETH or less");
     (bool sent, ) = payable(msg.sender).call{value: _amount}("");
