@@ -2,6 +2,18 @@ import { mutation, query } from './_generated/server';
 
 /*
   declare it
+    const getAllFunction = useMutation("themes:getAll");
+
+  use it later
+    const response = await getAllFunction();
+  should return an array of all themes
+*/
+export const getAll = query(async ({ db }) => {
+  return await db.query('themes').collect();
+});
+
+/*
+  declare it
     const getFunction = useMutation("themes:get");
 
   use it later

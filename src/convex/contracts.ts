@@ -1,5 +1,18 @@
 import { mutation, query } from './_generated/server';
 
+//declare it
+//const addFunction = useMutation("contracts:add");
+//use it later
+//const response = await addFunction(
+//   contractName,
+//   blockchainName,
+//   ownerAddress,
+//   JSON.stringify(abiAsJson),
+//   contractAddress,
+//   contractCode,
+//   null,
+//   0 //times it has been viewed
+// );
 export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, themeId, numViews) => {
   return await db.insert('contracts', {
     name,
@@ -30,6 +43,6 @@ export const getBy = query(async ({ db }, chainName: string, contractAddress: st
 //   return await db.patch(documentId, { numViews: number });
 // });
 
-export const get = query(async ({ db }) => {
+export const getAll = query(async ({ db }) => {
   return await db.query('contracts').collect();
 });
