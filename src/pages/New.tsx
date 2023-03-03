@@ -16,6 +16,8 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const { chain, chains } = useNetwork()
   const { data: ensName } = useEnsName({ address });
+
+  //statuses
   const [isWritingToDb, setIsWritingToDb] = useState(false);
   const [isRedirecting, setIRedirecting] = useState(false);
  
