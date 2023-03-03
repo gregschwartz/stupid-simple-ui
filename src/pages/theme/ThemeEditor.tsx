@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { FormEvent } from 'react';
+import { useParams } from "react-router-dom";
 import './ThemeEditor.css';
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import { useMutation } from '../../convex/_generated/react';
@@ -18,7 +19,8 @@ interface Theme {
 }
 
 export default function ThemeEditor() {
-    
+    const { themeId } = useParams();
+
     const addFunction = useMutation("themes:add");
 
     const showError = async (text: String) => {
@@ -72,8 +74,8 @@ export default function ThemeEditor() {
 
         setIsWritingToDb(true);
         const failureTimer = setTimeout(() => {
-        setIsWritingToDb(false);
-        alert("😭 Couldn't write to the database. (Are you connected to the Internet?) Please try again, and let us know if it still doesn't work.");
+            setIsWritingToDb(false);
+            alert("😭 Couldn't write to the database. (Are you connected to the Internet?) Please try again, and let us know if it still doesn't work.");
         }, 10*1000);
         
         const response = await addFunction(
@@ -87,11 +89,10 @@ export default function ThemeEditor() {
 
         if(response !== undefined && response.id && response.tableName) {
             clearTimeout(failureTimer);
-      
-            //TODO: send to a sexy "building UI" screen instead
+
             await wait(10000);
             setIsWritingToDb(false);
-            window.location.pathname=`/theme`;            
+            window.location.pathname=`/themes`;
           }
     }
 
