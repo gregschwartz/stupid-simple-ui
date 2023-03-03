@@ -1,4 +1,4 @@
-  const guestBookAbiAsString = `{
+{
     "_format": "hh-sol-artifact-1",
     "contractName": "GuestBook",
     "sourceName": "contracts/GuestBook.sol",
@@ -110,4 +110,4 @@
     "deployedBytecode": "removed",
     "linkReferences": {},
     "deployedLinkReferences": {}
-  }`;
+  }
