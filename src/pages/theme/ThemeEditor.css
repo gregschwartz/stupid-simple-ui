@@ -1,0 +1,24 @@
+.themeEditorForm{
+    display: block;
+    width: 80%;
+    
+}
+
+.formRow{
+    display: grid;
+    grid-template-columns: 3fr 8fr;
+    grid-template-areas: "formLabel formInput";
+    margin-bottom: 10px;
+}
+
+.formLabel{
+    grid-area: formLabel;
+    display: flex;
+    justify-items: left;
+}
+
+.formInput {
+    grid-area: formInput;
+    display: flex;
+    justify-items: left;
+}

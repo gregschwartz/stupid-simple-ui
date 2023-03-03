@@ -4,7 +4,8 @@ import { ConvexProvider, ConvexReactClient } from "convex/react";
 
 //pages
 import Contract from "./pages/Contract";
-import New from "./pages/New"
+import New from "./pages/New";
+import ThemeEditor from './pages/theme/ThemeEditor';
 
 //replace
 import logo from './logo.svg';
@@ -31,6 +32,7 @@ function App() {
             <Routes>
               <Route path='/' element={<New />} />
               <Route path='contracts/:chain/:contractAddress' element={<Contract />} />
+              <Route path='/themes' element={<ThemeEditor />} />
             </Routes>
           </BrowserRouter>
         </ConvexProvider>
