@@ -9,7 +9,6 @@ import { useMutation, useQuery } from '../../convex/_generated/react';
 import { Web3Button } from "@web3modal/react";
 import CoolLoading from '../../components/coolLoading/CoolLoading';
 import Theme from './Theme';
-import { useParams } from 'react-router-dom';
 
 export default function ThemeEditor() {
 
