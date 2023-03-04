@@ -1,8 +1,12 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { FormEvent, useState } from 'react';
+import CoolLoading from '../components/coolLoading/CoolLoading';
+
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "../convex/_generated/react";
+import { useWagmi } from "../hooks/useWagmi";
+import { Web3Button, useWeb3Modal } from "@web3modal/react";
 
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};
@@ -29,31 +33,42 @@ import { useMutation, useQuery } from "../convex/_generated/react";
 //   </div>; 
 // }
 
-//prevent error: Property 'ethereum' does not exist on type Window 
-declare global {
-  interface Window{
-    ethereum?:any
-  }
-}
-
 
 export default function Contract() {
-  const { chain, contractAddress } = useParams();
-  const [address, setAddress] = useState("");
+  const { wagmiClient, chains } = useWagmi()
 
-  // const incrementNumViews = useMutation("contracts:incrementNumViews");
-  const result = useQuery("contracts:getBy", chain, contractAddress);
+  const { chainName, contractAddress } = useParams();
 
-  if(!result || result.length === 0) {
+  //automatically ask to switch to the relevant chain
+  const { setDefaultChain } = useWeb3Modal();
+  chains.forEach((c) => {
+    if(c.network.toLowerCase() === chainName.toLowerCase()) {
+      setDefaultChain(c);
+    }
+  });
+  
+  const result = useQuery("contracts:getBy", chainName, contractAddress);
+
+  //show loader instead of always showing the error until it loads
+  if(!result) {
+    return (
+      <div>
+        <i>Loading...</i>
+        <CoolLoading />
+      </div>
+    );
+  }
+  
+  if(result.length === 0) {
     return (
       <div>
         <h1>Error, contract not found</h1>
         <h3>
           Sorry, no one has made a UI for that contract. If you're the developer,{" "}
-          <a href={`/?chain=${chain}&contractAddress=${contractAddress}`}>go create it!</a>
+          <a href={`/?chain=${chainName}&contractAddress=${contractAddress}`}>go create it!</a>
         </h3>
         <h6>
-          Chain: {chain}<br />
+          Chain: {chainName}<br />
           Address: {contractAddress}
         </h6>
       </div>
@@ -74,17 +89,48 @@ export default function Contract() {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    setAddress(await signer.getAddress());
+    const walletAddress = await signer.getAddress();
+    // console.log(`connectWallet address '${walletAddress}'`);
     return contract.connect(signer);
   };
 
-  function showResult(form: HTMLFormElement, message: string) {
+  function showResult(form: HTMLFormElement, result: any) {
     let responseCells = form.getElementsByClassName("responseCell");
     if(responseCells.length > 0) {
       let cell = responseCells[0] as HTMLDivElement;
-      cell.innerHTML = message;
+      var html;
+
+      console.log(result);
+
+      //check if it is a transaction in-progress hash instead of data
+      if(Array.isArray(result)) {
+        html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+          result.forEach((element,index) => {
+            html += `<tr>
+              <td>${index}</td>
+              <td>${element}</td>
+            </tr>`;
+          });
+
+          html += `</tbody>
+        </table>`;
+
+      } else {
+        html = result;
+      }
+      
+      cell.innerHTML = html;
     } else {
-      alert("Cannot find where to show result, which is: " + message);
+      alert("Cannot find where to show result, which is: " + result);
     }
   }
 
@@ -139,8 +185,7 @@ export default function Contract() {
       <h1>{contractName}</h1>
       <div className='container'>
         <div className='header'>
-          {!address && <button id="connectWallet" onClick={connectWallet}>Connect Wallet</button>}
-          {address && <div>Address: {address}</div>}
+          <Web3Button /><br />
         </div>
 
         <div className='formSection'>

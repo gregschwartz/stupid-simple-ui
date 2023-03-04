@@ -37,19 +37,19 @@ export default function CoolRedirect() {
     <div className='container'>
       <div className="checkListContainer" ref={divRef}>
         <div className="checkListItem">
-          <div className={`checkboxItem  ${checks[0] ? "visible" : "unvisible"}`}>🗹</div>
+          <div className={`checkboxItem  ${checks[0] ? "visible" : "unvisible"}`}>✅</div>
           <div className="textItem">Fetching contract address through a series of tubes</div>
         </div>
         <div className="checkListItem">
-          <div className={`checkboxItem ${checks[1] ? "visible" : "unvisible"}`}>🗹</div>
+          <div className={`checkboxItem ${checks[1] ? "visible" : "unvisible"}`}>✅</div>
           <div className="textItem">Making an offering to Vitalik </div>
         </div>
         <div className="checkListItem">
-          <div className={`checkboxItem ${checks[2] ? "visible" : "unvisible"}`}>🗹</div>
+          <div className={`checkboxItem ${checks[2] ? "visible" : "unvisible"}`}>✅</div>
           <div className="textItem">Analyzing ABI for methods and data</div>
         </div>
         <div className="checkListItem">
-          <div className={`checkboxItem ${checks[3] ? "visible" : "unvisible"}`}>🗹</div>
+          <div className={`checkboxItem ${checks[3] ? "visible" : "unvisible"}`}>✅</div>
           <div className="textItem">Generating your brand new UI</div>
         </div>
         {/* <div className="checkListItem">

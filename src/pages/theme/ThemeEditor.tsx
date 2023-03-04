@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import { FormEvent } from 'react';
+import { useParams } from "react-router-dom";
 import './ThemeEditor.css';
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import { Id, Document } from "../../convex/_generated/dataModel";
@@ -104,8 +105,8 @@ export default function ThemeEditor() {
 
         setIsWritingToDb(true);
         const failureTimer = setTimeout(() => {
-        setIsWritingToDb(false);
-        alert("😭 Couldn't write to the database. (Are you connected to the Internet?) Please try again, and let us know if it still doesn't work.");
+            setIsWritingToDb(false);
+            alert("😭 Couldn't write to the database. (Are you connected to the Internet?) Please try again, and let us know if it still doesn't work.");
         }, 10*1000);
         
         if(editing){
