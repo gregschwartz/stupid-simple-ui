@@ -1,32 +1,61 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormEvent } from 'react';
 import { useParams } from "react-router-dom";
 import './ThemeEditor.css';
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
-import { useMutation } from '../../convex/_generated/react';
+import { Id, Document } from "../../convex/_generated/dataModel";
+import { useMutation, useQuery } from '../../convex/_generated/react';
 import { Web3Button } from "@web3modal/react";
 import CoolLoading from '../../components/coolLoading/CoolLoading';
-
-interface Theme {
-    id?: String,
-    name: String,
-    backgroundColor: String,
-    formBackgroundColor: String,
-    textColor: String,
-    buttonBackgroundColor: String,
-    buttonTextColor: String
-}
+import Theme from './Theme';
 
 export default function ThemeEditor() {
+
     const { themeId } = useParams();
 
     const addFunction = useMutation("themes:add");
+    const updFunction = useMutation("themes:update");
+
+    let theTheme: Theme[];
+    const getThemeFunction = useQuery("themes:get", new Id("themes", themeId ?? "XxxXxxxxxXXXXxxxXX0X0x") );
 
     const showError = async (text: String) => {
         alert(text);
-      };
+    };
 
+    useEffect(() => {
+
+        const loadTheme = async() => {
+            console.log('Loading The Theme');
+            
+            const result = await getThemeFunction;
+            console.log(result);
+            console.log(result["_id"]);
+            console.log(result["name"]);
+            setName(result["name"]);
+            console.log(result["backgroundColor"]);
+            setBackgroundColor(result["backgroundColor"]);
+            console.log(result["formBackgroundColor"]);
+            setFormBackgroundColor(result["formBackgroundColor"]);
+            console.log(result["textColor"]);
+            setTextColor(result["textColor"]);
+            console.log(result["buttonBackgroundColor"]);
+            setButtonBackgroundColor(result["buttonBackgroundColor"]);
+            console.log(result["buttonTextColor"]);
+            setButtonTextColor(result["buttonTextColor"]);
+        }
+        try{
+            if(themeId){
+                loadTheme();
+                setEditing(true)
+            }            
+        } catch(error){
+            console.log(error)
+        }
+
+     }, [getThemeFunction,themeId]);
+    
     //wagmi for wallet interactions
     const { address, isConnected } = useAccount();
     const { chain } = useNetwork()
@@ -39,12 +68,13 @@ export default function ThemeEditor() {
     const [textColor, setTextColor] = useState('');
     const [buttonBackgroundColor, setButtonBackgroundColor] = useState('');
     const [buttonTextColor, setButtonTextColor] = useState('');
+    const [editing, setEditing] = useState(false);
 
     function wait(timeout) {
         return new Promise(resolve => {
             setTimeout(resolve, timeout);
         });
-      }
+    }
 
     const handleSubmit = async (event: FormEvent) => {
         // Stop the form from submitting and refreshing the page.
@@ -78,22 +108,50 @@ export default function ThemeEditor() {
             alert("😭 Couldn't write to the database. (Are you connected to the Internet?) Please try again, and let us know if it still doesn't work.");
         }, 10*1000);
         
-        const response = await addFunction(
-            name,
-            backgroundColor,
-            formBackgroundColor,
-            textColor,
-            buttonBackgroundColor,
-            buttonTextColor
-        );
+        if(editing){
 
-        if(response !== undefined && response.id && response.tableName) {
-            clearTimeout(failureTimer);
+            const response = await updFunction(
+                new Id("themes", themeId),
+                name,
+                backgroundColor,
+                formBackgroundColor,
+                textColor,
+                buttonBackgroundColor,
+                buttonTextColor
+            );
 
-            await wait(10000);
-            setIsWritingToDb(false);
-            window.location.pathname=`/themes`;
-          }
+            console.log("--Response--");
+            console.log(response);
+            if(response !== undefined) {
+                clearTimeout(failureTimer);
+          
+                //TODO: send to a sexy "building UI" screen instead
+                await wait(10000);
+                setIsWritingToDb(false);         
+            }
+
+        } else {
+
+            const response = await addFunction(
+                name,
+                backgroundColor,
+                formBackgroundColor,
+                textColor,
+                buttonBackgroundColor,
+                buttonTextColor
+            );
+    
+            if(response !== undefined && response.id && response.tableName) {
+                clearTimeout(failureTimer);
+          
+                //TODO: send to a sexy "building UI" screen instead
+                await wait(10000);
+                setIsWritingToDb(false);
+                window.location.pathname=`/themes`;            
+            }
+
+        }
+        
     }
 
     return (
