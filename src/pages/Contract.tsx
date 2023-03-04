@@ -1,6 +1,8 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { FormEvent, useState } from 'react';
+import CoolLoading from '../components/coolLoading/CoolLoading';
+
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "../convex/_generated/react";
 import { useWagmi } from "../hooks/useWagmi";
@@ -47,7 +49,17 @@ export default function Contract() {
   
   const result = useQuery("contracts:getBy", chainName, contractAddress);
 
-  if(!result || result.length === 0) {
+  //show loader instead of always showing the error until it loads
+  if(!result) {
+    return (
+      <div>
+        <i>Loading...</i>
+        <CoolLoading />
+      </div>
+    );
+  }
+  
+  if(result.length === 0) {
     return (
       <div>
         <h1>Error, contract not found</h1>
