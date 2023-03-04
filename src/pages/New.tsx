@@ -5,8 +5,12 @@ import { useMutation } from '../convex/_generated/react';
 import { Web3Button } from "@web3modal/react";
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import CoolRedirect from '../components/coolRedirect/CoolRedirect';
+import { useWagmi } from '../hooks/useWagmi';
 
 export default function Home() {
+
+  const { wagmiClient, ethereumClient, chains } = useWagmi()
+  console.log({ wagmiClient, ethereumClient })
   //wrap the db function
   const addFunction = useMutation("contracts:add");
 
