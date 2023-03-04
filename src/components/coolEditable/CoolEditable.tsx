@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // Component accept text, placeholder values and also pass what type of Input - input, textarea so that we can use it for styling accordingly
 const Editable = ({
+  childRef,
   text,
   type,
   placeholder,
   children,
   ...props
 }) => {
-  // Manage the state whether to show the label or the input box. By default, label will be shown.
-// Exercise: It can be made dynamic by accepting initial state as props outside the component 
-  const [isEditing, setEditing] = useState(false);
+  
+const [isEditing, setEditing] = useState(false);
+
+useEffect(() => {
+  if (childRef && childRef.current && isEditing === true) {
+    childRef.current.focus();
+  }
+}, [isEditing, childRef]);
 
 // Event handler while pressing any key while editing
   const handleKeyDown = (event, type) => {
