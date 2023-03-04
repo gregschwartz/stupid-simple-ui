@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { useMutation, useQuery } from "../convex/_generated/react";
 import { useWagmi } from "../hooks/useWagmi";
 import { Web3Button, useWeb3Modal } from "@web3modal/react";
+import { useWeb3ModalTheme } from "@web3modal/react";
 
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};
@@ -36,6 +37,7 @@ import { Web3Button, useWeb3Modal } from "@web3modal/react";
 
 export default function Contract() {
   const { wagmiClient, chains } = useWagmi()
+  const { theme, setTheme } = useWeb3ModalTheme();
 
   const { chainName, contractAddress } = useParams();
 
@@ -52,8 +54,8 @@ export default function Contract() {
   //show loader instead of always showing the error until it loads
   if(!result) {
     return (
-      <div>
-        <i>Loading...</i>
+      <div className="loadingWrapper">
+        <span>Loading...</span>
         <CoolLoading />
       </div>
     );
@@ -79,6 +81,13 @@ export default function Contract() {
   const record = result[0];
   const abi = JSON.parse(record.contractAbi);
   const contractName = record.name;
+
+  // Set modal theme
+  setTheme({
+    themeColor: "blue", //record.themeId.toString()
+    // themeMode: "dark",
+    // themeBackground: "gradient",
+  });
 
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
