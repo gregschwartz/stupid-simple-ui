@@ -7,6 +7,8 @@ import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import CoolRedirect from '../components/coolRedirect/CoolRedirect';
 import { useWagmi } from '../hooks/useWagmi';
 
+import './New.css';
+
 export default function Home() {
 
   const { wagmiClient, ethereumClient, chains } = useWagmi()
@@ -114,7 +116,7 @@ export default function Home() {
 pragma solidity 0.8.17;
 
 contract Escrow {
-address public ...`;
+  address public ...`;
 
   const placeholderAbi = `{
   "_format": "hh-sol-artifact-1",
@@ -139,45 +141,69 @@ address public ...`;
 
   return (
     isRedirecting? <CoolRedirect /> :
-    <div className='container'>
-      <h1>Host My Contract</h1>
-
+    <>
+    <div className='descriptionHeader'>
+      <div className='logo'>
+        <img src="/logo.png" alt="Stupid Simple UI logo" />
+      </div>
+      <div className='content'>
+        <h2>Automagic UI for Smart Contracts</h2>
+        <p>
+          Think Squarspace, for your smart contract.<br />
+          We make and host a beautiful customizable UI that you can immediately share.<br />
+          No need to learn React, or even CSS!<br />
+        </p>
+      </div>
+    </div>
+    <div className='descriptionBullets'>
+      <div className='num1'>
+        1. Input Contract Details
+      </div>
+      <div className='num2'>
+        2. Connect Wallet
+      </div>
+      <div className='num3'>
+        3. Share your new UI!
+      </div>
+    </div>
+    <div className='newFormWrapper'>
+      <h2>Host My Contract</h2>
+      {/* <p className='description'>
+        There are very skilled devs that make smart contracts and hate making the UI, often things launch and people have to use etherscan.io to interact with them (either initially or forever). This allows devs to just focus on the contract for their dapp.
+      </p> */}
       <form onSubmit={handleSubmit} className='solidityForm'>
-        <div className=' formRow'>
-          <div className='formLabel'>
-            <Web3Button /><br />
-            {chain ? `Network: ${chain.name}` : ""}
+        <div className='addressSection row'>
+          <div className='label'>
+            <label htmlFor="contractAddress">Contract Address</label> 
           </div>
-        </div>
-        <div className='addressSection formRow'>
-          <div className='formLabel'>
-            <label htmlFor="contractAddress">Contract Deployment Address</label> 
-          </div>
-          <div className='formInput'>
+          <div className='input'>
             <input type="text" id="contractAddress" name="contractAddress" className='contractAddress' required minLength={5} size={52} placeholder='0xa4e4745a1066ac0faebe4e005793b172c69cc9c4' />
+            <span className='chainName'>
+              {chain ? `${chain.name}` : ""}
+            </span>
           </div>
         </div>
-        <div className='codeSection formRow'>
-          <div className='formLabel'>
-            <label htmlFor="contractCode">Contract Code:</label>   
+        <div className='codeSection row'>
+          <div className='label'>
+            <label htmlFor="contractCode">Contract Code</label>
           </div>
-          <div className='formInput'>
-            <textarea name="contractCode" id="contractCode" className='contractCode' rows={20} required placeholder={placeholderContractCode} />
-          </div>
-        </div>
-        <div className='codeSection formRow'>
-          <div className='formLabel'>
-            <label htmlFor="contractAbi">Contract ABI:</label>   
-          </div>
-          <div className='formInput'>
-            <textarea name="contractAbi" id="contractAbi" className='contractAbi' rows={20} required placeholder={placeholderAbi} />
+          <div className='input'>
+            <textarea name="contractCode" id="contractCode" className='contractCode' rows={20} required placeholder={placeholderContractCode} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
           </div>
         </div>
-        <div className='submitSection formRow'>
-          <div className='formLabel'>
+        <div className='codeSection row'>
+          <div className='label'>
+            <label htmlFor="contractAbi">Contract ABI</label>
+          </div>
+          <div className='input'>
+            <textarea name="contractAbi" id="contractAbi" className='contractAbi' rows={20} required placeholder={placeholderAbi} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
+          </div>
+        </div>
+        <div className='submitSection row'>
+          <div className='label'>
             <></>
           </div>
-          <div className='formInput'>
+          <div className='input'>
             {isConnected ? (
               <button id="submitButton" type="submit" className='submit' disabled={isWritingToDb}>Host My Contract</button>
               ) : (
@@ -189,5 +215,6 @@ address public ...`;
       </form>
 
     </div>
+    </>
   )
 }

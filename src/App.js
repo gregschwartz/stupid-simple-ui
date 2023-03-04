@@ -1,5 +1,4 @@
 import './App.css';
-import logo from './logo.png';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
@@ -26,27 +25,30 @@ function App() {
     <>
     <WagmiConfig client={wagmiClient}>
     <div className="App">
-      <header>
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>Stupid Simple UI</h1>
-        <nav>
-          <i>Example UIs: </i>
-          <a href="/contracts/Goerli/0xDB0d5dB07d42D5589230e40c3A51Ac8454D312d3">GuestBook</a>
+      <header className='appHeader'>
+        <h1>
+          <a href="/">Stupid Simple UI</a>
+        </h1>
+        <div className='examples'>
+          Examples:{" "}
+          <a href="/contracts/Goerli/0xDB0d5dB07d42D5589230e40c3A51Ac8454D312d3">Guestbook</a>
           {" | "}
           <a href="/contracts/goerli/0xcaFAa9C9662f2a7EaeceD891C039317035286540">Escrow</a>
           {" | "}
-          <a href="/contracts/goerli/0xa4e4745a1066ac0faebe4e005793b172c69cc9c4">Greg Token</a>
-        </nav>
-        <Web3Button />
+          <a href="/contracts/goerli/0xa4e4745a1066ac0faebe4e005793b172c69cc9c4">ERC20 Token</a>
+        </div>
+        <div className='walletButton'>
+          <Web3Button />
+        </div>
         <Web3Modal
-          projectId="6469fc0f92c76b3fb593c78ff3fd92c7"
-          ethereumClient={ethereumClient}
-          themeColor='purple'
-          />
-            {/* themeMode?: 'dark' | 'light';
-            themeColor?: 'blackWhite' | 'blue' | 'default' | 'green' | 'magenta' | 'orange' | 'purple' | 'teal';
-            themeBackground?: 'gradient' | 'themeColor';
-            themeZIndex?: number; */}
+        projectId="6469fc0f92c76b3fb593c78ff3fd92c7"
+        ethereumClient={ethereumClient}
+        themeColor='purple'
+        />
+        {/* themeMode?: 'dark' | 'light';
+        themeColor?: 'blackWhite' | 'blue' | 'default' | 'green' | 'magenta' | 'orange' | 'purple' | 'teal';
+        themeBackground?: 'gradient' | 'themeColor';
+        themeZIndex?: number; */}
       </header>
       <div className='main'>
           <ConvexProvider client={convex}>
