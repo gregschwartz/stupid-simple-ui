@@ -18,7 +18,7 @@ export default function ThemeEditor() {
     const updFunction = useMutation("themes:update");
 
     let theTheme: Theme[];
-    const getThemeFunction = useQuery("themes:get", new Id("themes", themeId ?? "XxxXxxxxxXXXXxxxXX0X0x") );
+    const getThemeFunction = useQuery("themes:get", themeId ?? new Id("themes", "") );
 
     const showError = async (text: String) => {
         alert(text);

@@ -1,12 +1,13 @@
-import * as React from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { useParams } from "react-router-dom";
-import { FormEvent, useState } from 'react';
 import CoolLoading from '../components/coolLoading/CoolLoading';
 
 import { ethers } from "ethers";
+import { Id } from "../convex/_generated/dataModel"
 import { useMutation, useQuery } from "../convex/_generated/react";
 import { useWagmi } from "../hooks/useWagmi";
 import { Web3Button, useWeb3Modal } from "@web3modal/react";
+import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
 
 // function Field({ name: string, type: string, internalType: string }) {
@@ -34,12 +35,41 @@ import { useWeb3ModalTheme } from "@web3modal/react";
 //   </div>; 
 // }
 
+interface Contract  {
+  _id: Id<"contracts">;
+  _creationTime: number;
+  chainName: string;
+  contractAddress: string;
+  name: string;
+  ownerAddress: string;
+  contractAbi: any;
+  contractCode: string;
+  themeId: Id<"themes">;
+  numViews: number;
+}
 
 export default function Contract() {
   const { wagmiClient, chains } = useWagmi()
   const { theme, setTheme } = useWeb3ModalTheme();
 
   const { chainName, contractAddress } = useParams();
+
+  const [contractName, setContractName] = useState('');
+
+  let oContract: Contract = {
+    _id: new Id("contracts", ""),
+    _creationTime: 0,
+    chainName: "",
+    contractAddress: "",
+    name: "",
+    ownerAddress: "",
+    contractAbi: `{"_format":"hh-sol-artifact-1","contractName":"Foo","sourceName":"contracts/Foo.sol","abi":[{"inputs":[{"internalType":"bytes3[2]","name":"","type":"bytes3[2]"}],"name":"bar","outputs":[],"stateMutability":"pure","type":"function"}]}`,
+    contractCode: "",
+    themeId: new Id("themes", ""),
+    numViews: 0
+  };
+
+  const [record, setRecord] = useState(oContract);
 
   //automatically ask to switch to the relevant chain
   const { setDefaultChain } = useWeb3Modal();
@@ -49,45 +79,58 @@ export default function Contract() {
     }
   });
   
-  const result = useQuery("contracts:getBy", chainName, contractAddress);
+  let getByFunc = useQuery("contracts:getBy", chainName, contractAddress);
 
   //show loader instead of always showing the error until it loads
-  if(!result) {
-    return (
-      <div className="loadingWrapper">
-        <span>Loading...</span>
-        <CoolLoading />
-      </div>
-    );
-  }
   
-  if(result.length === 0) {
-    return (
-      <div>
-        <h1>Error, contract not found</h1>
-        <h3>
-          Sorry, no one has made a UI for that contract. If you're the developer,{" "}
-          <a href={`/?chain=${chainName}&contractAddress=${contractAddress}`}>go create it!</a>
-        </h3>
-        <h6>
-          Chain: {chainName}<br />
-          Address: {contractAddress}
-        </h6>
-      </div>
-    );
-  }
+  useEffect(() => {
+
+    const loadContract = async() => {
+
+      let result = await getByFunc;
+
+      if(!result) {
+        return (
+          <div className="loadingWrapper">
+          <span>Loading...</span>  
+            <CoolLoading />
+          </div>
+        );
+      };
+
+      if(result.length === 0) {
+        return (
+          <div>
+            <h1>Error, contract not found</h1>
+            <h3>
+              Sorry, no one has made a UI for that contract. If you're the developer,{" "}
+              <a href={`/?chain=${chainName}&contractAddress=${contractAddress}`}>go create it!</a>
+            </h3>
+            <h6>
+              Chain: {chainName}<br />
+              Address: {contractAddress}
+            </h6>
+          </div>
+        );
+      }
+
+      setRecord(result[0]);
+      setContractName(record.name);
+
+    }
+
+    loadContract();
+
+  }, [chainName, contractAddress, record.name, getByFunc]);
+
+  
 
   //TODO: add support for an ID in the URL, and then use that one instead!
-  const record = result[0];
+  //const record = result[0];
+  //setRecord(result[0]);
   const abi = JSON.parse(record.contractAbi);
-  const contractName = record.name;
-
-  // Set modal theme
-  setTheme({
-    themeColor: "blue", //record.themeId.toString()
-    // themeMode: "dark",
-    // themeBackground: "gradient",
-  });
+  //const contractName = record.name;
+  //setContractName(record.name);
 
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
@@ -191,7 +234,22 @@ export default function Contract() {
 
   return (
     <div>
-      <h1>{contractName}</h1>
+      <h1>
+        {/* {contractName} */}
+        <Editable
+          text={contractName}
+          placeholder="Write a contract name"
+          type="input"
+        >
+          <input
+          type="text"
+          name="contractName"
+          placeholder="Write a contract name"
+          value={contractName}
+          onChange={e => setContractName(e.target.value)}
+          />
+        </Editable>
+        </h1>
       <div className='container'>
         <div className='header'>
           <Web3Button /><br />
