@@ -8,8 +8,6 @@ export default function CoolRedirect() {
   const [checks, setChecks] = useState(initialCheckState);
   const [counter, setCounter] = useState(0);
 
-
-
   useEffect(() => {
 
     console.log(divRef.current?.childNodes);

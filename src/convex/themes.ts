@@ -20,7 +20,10 @@ export const getAll = query(async ({ db }) => {
     const response = await getFunction(id);
 */
 export const get = query(async ({ db }, themeId) => {
-  return await db.get(themeId);
+  return await db
+  .query('themes')
+  .filter(themeId)
+  .collect();
 });
 
 /*
