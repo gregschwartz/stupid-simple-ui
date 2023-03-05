@@ -20,7 +20,17 @@ useEffect(() => {
 
 // Event handler while pressing any key while editing
   const handleKeyDown = (event, type) => {
-    // Handle when key is pressed
+    const { key } = event;
+    const keys = ["Escape", "Tab"];
+    const enterKey = "Enter";
+    const allKeys = [...keys, enterKey]; // All keys array
+
+    if (
+      (type === "textarea" && keys.indexOf(key) > -1) ||
+      (type !== "textarea" && allKeys.indexOf(key) > -1)
+    ) {
+      setEditing(false);
+    }
   };
 
 /*

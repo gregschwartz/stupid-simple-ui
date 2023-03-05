@@ -197,7 +197,8 @@ export default function Contract() {
       ...record,
       name : e.target.value
     });
-    console.log("changing name")
+    
+    console.log("changing name");
     console.log(record);
   }
 
