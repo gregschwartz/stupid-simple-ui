@@ -6,6 +6,7 @@ import { Web3Button } from "@web3modal/react";
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import CoolRedirect from '../components/coolRedirect/CoolRedirect';
 import { useWagmi } from '../hooks/useWagmi';
+import { titleCaseSentence } from '../helpers/titleCase';
 
 import './New.css';
 
@@ -77,7 +78,7 @@ export default function Home() {
     }
 
     //parse the name from the ABI
-    const contractName = (abiAsJson["contractName"]?.length > 0 ? abiAsJson["contractName"] : contractAddress);
+    const contractName = (abiAsJson["contractName"]?.length > 0 ? titleCaseSentence(abiAsJson["contractName"]) : contractAddress);
 
     //remove the big chunks of data from the JSON, so it doesn't hit Convex's storage limit
     abiAsJson["bytecode"] = "removed";
@@ -167,7 +168,7 @@ contract Escrow {
         3. Share your new UI!
       </div>
     </div>
-    <div className='newFormWrapper'>
+    <div className='newFormWrapper prettyBackground'>
       <h2>Host My Contract</h2>
       {/* <p className='description'>
         There are very skilled devs that make smart contracts and hate making the UI, often things launch and people have to use etherscan.io to interact with them (either initially or forever). This allows devs to just focus on the contract for their dapp.

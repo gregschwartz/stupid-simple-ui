@@ -9,6 +9,7 @@ import { useWagmi } from "../hooks/useWagmi";
 import { Web3Button, useWeb3Modal } from "@web3modal/react";
 import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
+import { titleCaseSentence } from '../helpers/titleCase';
 
 import './Contract.css';
 
@@ -249,7 +250,7 @@ export default function Contract() {
     }
 
     setStyleTagForTheme(`
-    header a, .contractPage h1 { color: ${backgroundColor} !important; }
+    header a { color: ${backgroundColor} !important; }
     header #colorSquare, button {
       background: ${backgroundColor} !important;
       color: ${textColor} !important;
@@ -324,7 +325,7 @@ export default function Contract() {
 
   return (
     isLoading? <CoolLoading/> :
-    <div className="contractPage">
+    <div className="contractPage prettyBackground">
       <h1 onClick={() => setEditing(true)}>
         <Editable
           text={record.name}
@@ -350,7 +351,7 @@ export default function Contract() {
     
           return (
             <form onSubmit={handleSubmit} name={functionOrObject.name} key={functionOrObject.name}>
-              <h2>{functionOrObject.name}</h2>
+              <h2>{functionOrObject.prettyName ?? titleCaseSentence(functionOrObject.name)}</h2>
 
               {(functionOrObject.stateMutability === "payable" ? (
                 <div className='addressSection row'>
@@ -371,7 +372,7 @@ export default function Contract() {
                   placeholder = "Letters";
                 }
 
-                let name = input.prettyName ?? input.name ?? "id";
+                let name = input.prettyName ?? titleCaseSentence(input.name) ?? "Id";
 
                 //remove the underscore, it's common practice to use in the context of setting a class variable
                 if(name[0] == "_") { name = name.substring(1); }

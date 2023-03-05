@@ -59,3 +59,10 @@ body, .App header h1 a {
 .loadingEthereum {
   animation: spinner 1.5s linear infinite;
 }
+
+.prettyBackground {
+  background-image: url("/public/background.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
