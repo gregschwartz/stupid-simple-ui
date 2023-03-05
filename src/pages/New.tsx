@@ -154,6 +154,7 @@ contract Escrow {
           Provide your smart contract.<br />
           We make and host a beautiful customizable UI that you can immediately share.<br />
           No need to learn React, or even CSS!<br />
+          <strong style={{"color": "rgb(203,77,140)"}}>Free until June 30, thanks to EthDenver!</strong>
         </p>
       </div>
     </div>
