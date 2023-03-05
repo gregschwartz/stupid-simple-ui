@@ -150,7 +150,7 @@ contract Escrow {
       <div className='content'>
         <h2>Automagic UI for Smart Contracts</h2>
         <p>
-          Think Squarspace, for your smart contract.<br />
+          Provide your smart contract.<br />
           We make and host a beautiful customizable UI that you can immediately share.<br />
           No need to learn React, or even CSS!<br />
         </p>
