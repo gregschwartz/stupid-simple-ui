@@ -9,6 +9,7 @@ export default defineSchema({
     contractAddress: s.string(),
     contractCode: s.string(),
     themeId: s.id('themes'),
+    themeNameForWalletConnect: s.string(),
     numViews: s.number()
   })
   .index("by_owner_address", ["chainName", "ownerAddress"])

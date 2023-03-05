@@ -5,6 +5,7 @@ import CoolLoading from '../components/coolLoading/CoolLoading';
 import { ethers } from "ethers";
 import { Id } from "../convex/_generated/dataModel"
 import { useMutation, useQuery } from "../convex/_generated/react";
+import { useAccount } from 'wagmi';
 import { useWagmi } from "../hooks/useWagmi";
 import { Web3Button, useWeb3Modal } from "@web3modal/react";
 import Editable from "../components/coolEditable/CoolEditable";
@@ -50,6 +51,7 @@ interface Contract  {
 
 export default function Contract() {
   const { wagmiClient, chains } = useWagmi()
+  const { address, isConnected } = useAccount();
   const { theme, setTheme } = useWeb3ModalTheme();
 
   const { chainName, contractAddress } = useParams();
@@ -117,6 +119,28 @@ export default function Contract() {
       setRecord(result[0]);
       setContractName(record.name);
 
+      //set color in WalletConnect
+      if(result[0].themeNameForWalletConnect?.length > 0) {
+        const c = result[0].themeNameForWalletConnect;
+        console.log("set walletConnect button to ", c);
+
+        //🤢 have to use this lunatic method because of the way WalletConnect coded it to only allow specific color values!
+        if(c == "blackWhite") {
+          setTheme({themeColor: "blackWhite"});
+        } else if(c == "blue") {
+          setTheme({themeColor: "blue"});
+        } else if(c == "green") {
+          setTheme({themeColor: "green"});
+        } else if(c == "magenta") {
+          setTheme({themeColor: "magenta"});
+        } else if(c == "orange") {
+          setTheme({themeColor: "orange"});
+        } else if(c == "purple") {
+          setTheme({themeColor: "purple"});
+        } else if(c == "teal") {
+          setTheme({themeColor: "teal"});
+        }
+      }
     }
 
     loadContract();
@@ -229,9 +253,6 @@ export default function Contract() {
 
   }
 
-  //removed becaues it just counts up endlessly
-  // incrementNumViews(record._id);
-
   return (
     <div>
       <h1>
@@ -251,10 +272,6 @@ export default function Contract() {
         </Editable>
         </h1>
       <div className='container'>
-        <div className='header'>
-          <Web3Button /><br />
-        </div>
-
         <div className='formSection'>
           {abi.abi.map((functionOrObject) => {
             if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
@@ -291,7 +308,8 @@ export default function Contract() {
                     <></>
                   </div>
                   <div className='formInput'>
-                    <button type="submit" className='submit'>Submit</button>
+                    {isConnected && <button type="submit" className='submit'>Submit</button>}
+                    {!isConnected && <Web3Button />}
                   </div>
                 </div>
                 

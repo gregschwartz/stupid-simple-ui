@@ -97,6 +97,7 @@ export default function Home() {
       contractAddress,
       contractCode,
       null,
+      "default",
       0 //times it has been viewed
     );
 

@@ -13,7 +13,7 @@ import { mutation, query } from './_generated/server';
 //   null,
 //   0 //times it has been viewed
 // );
-export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, themeId, numViews) => {
+export const add = mutation(async ({ db }, name, chainName, ownerAddress, contractAbi, contractAddress, contractCode, themeId, themeNameForWalletConnect, numViews) => {
   return await db.insert('contracts', {
     name,
     chainName,
@@ -22,6 +22,7 @@ export const add = mutation(async ({ db }, name, chainName, ownerAddress, contra
     contractAddress,
     contractCode,
     themeId,
+    themeNameForWalletConnect,
     numViews
   });
 });
@@ -34,6 +35,7 @@ export const getBy = query(async ({ db }, chainName: string, contractAddress: st
   .eq("chainName", chainName)
   .eq("contractAddress", contractAddress)
   )
+  .order("desc")
   .collect();
 }); 
 
