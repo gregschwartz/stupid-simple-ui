@@ -33,18 +33,11 @@ body, .App header h1 a {
 }
 
 .App header .examples {
-  margin-left: auto;
-  margin-right: 10px;
+  margin-left: 15px;
+  margin-right: auto;
   margin-bottom: 15px;
   font-size: 1em;
 }
-
-@media screen and (max-width: 950px) {
-  .App header .examples {
-    display: none;
-  }
-}
-
 
 .App header .walletButton {
   margin-left: 20px;

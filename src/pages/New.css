@@ -8,6 +8,8 @@ body, .newFormWrapper textarea, .newFormWrapper input[type=text] {
 
 .newFormWrapper {
   padding: 30px 0 50px 0;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .descriptionHeader, .descriptionBullets {
@@ -74,11 +76,6 @@ form .row button {
 
 .newFormWrapper, form .row button, .newFormWrapper textarea, .newFormWrapper input[type=text] {
   border-radius: 10px;
-}
-
-.newFormWrapper {
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .newFormWrapper h2 {
