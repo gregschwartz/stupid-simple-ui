@@ -149,7 +149,7 @@ contract Escrow {
         <img src="/logo.png" alt="Stupid Simple UI logo" />
       </div>
       <div className='content'>
-        <h2>Automagic UI for Smart Contracts</h2>
+        <h2>Automagic UI & Hosting for Smart Contracts</h2>
         <p>
           Provide your smart contract.<br />
           We make and host a beautiful customizable UI that you can immediately share.<br />
