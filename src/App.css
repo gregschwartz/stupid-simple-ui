@@ -39,6 +39,13 @@ body, .App header h1 a {
   font-size: 1em;
 }
 
+@media screen and (max-width: 950px) {
+  .App header .examples {
+    display: none;
+  }
+}
+
+
 .App header .walletButton {
   margin-left: 20px;
   margin-bottom: 4px;

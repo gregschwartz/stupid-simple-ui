@@ -170,7 +170,10 @@ export default function Contract() {
       var html;
 
       //check if it is a transaction in-progress hash instead of data
-      if(result.hash) {
+      if(result == null) {
+        setExecutionStatus(ExecutionStatus.ERROR);
+        html = `😭 Error, the contract didn't accept your request! Try different parameters or again later.`;
+      } else if(result.hash) {
         html = `<img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> Awaiting confirmation, up to 5 min wait (see wallet for info)`;
         console.log("awaiting confirm");
 
