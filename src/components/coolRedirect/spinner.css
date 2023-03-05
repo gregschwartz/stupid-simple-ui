@@ -27,12 +27,18 @@
 .checkListItem{
   display: flex;
   justify-content: start;
+  font-size: 36px;
+  margin: 15px auto;
+}
+
+.checkListItem .textItem {
+  margin-left: 7px;
 }
 
 .unvisible {
-    display: none;
+    visibility: hidden;
 }
 
 .visible {
-    display:block;
+    visibility: visible;
 }

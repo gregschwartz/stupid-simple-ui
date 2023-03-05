@@ -51,6 +51,14 @@ interface Contract  {
   numViews: number;
 }
 
+export enum ExecutionStatus {
+  START = "START",
+  EXECUTING = "executing",
+  AWAITING_CONFIRMATION = "executed, awaiting confirmation",
+  CONFIRMED = "confirmed and done",
+  ERROR = "error",
+}
+
 export default function Contract() {
   const { wagmiClient, chains } = useWagmi()
   const { address, isConnected } = useAccount();
@@ -61,6 +69,7 @@ export default function Contract() {
   
   const [isEditing, setEditing] = useState(false);
   const [isLoading, setIsloading] = useState(true);
+  const [executionStatus, setExecutionStatus] = React.useState<ExecutionStatus>(ExecutionStatus.START);
 
   let oContract: Contract = {
     _id: new Id("contracts", ""),
@@ -159,10 +168,17 @@ export default function Contract() {
       let cell = responseCells[0] as HTMLDivElement;
       var html;
 
-      console.log(result);
-
       //check if it is a transaction in-progress hash instead of data
-      if(Array.isArray(result)) {
+      if(result.hash) {
+        html = `<img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> Awaiting confirmation, up to 5 min wait (see wallet for info)`;
+        console.log("awaiting confirm");
+
+        result.wait().then(() => {
+          setExecutionStatus(ExecutionStatus.CONFIRMED);
+          html = `✅ Confirmed!`;
+          cell.innerHTML = html;
+        });
+      } else if(Array.isArray(result)) {
         html = `Response:<br />
           <table>
             <thead>
@@ -192,7 +208,7 @@ export default function Contract() {
       alert("Cannot find where to show result, which is: " + result);
     }
   }
-  
+
   function rotateTheme() {
     const themeList = ["default", "blue", "green", "magenta", "orange", "purple", "blackWhite", "teal"];   
 
@@ -264,6 +280,9 @@ export default function Contract() {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
+    setExecutionStatus(ExecutionStatus.EXECUTING);
+    showResult(form, "Calling your wallet and the blockchain...");
+
     console.log("call contract's method: ", form.name);
 
     //future, this won't work with SELECTs nor radio buttons...
@@ -298,8 +317,9 @@ export default function Contract() {
       }
 
       showResult(form, reason);
+      setExecutionStatus(ExecutionStatus.START);
     }
-
+    setExecutionStatus(ExecutionStatus.AWAITING_CONFIRMATION);
   }
 
   return (
@@ -370,7 +390,9 @@ export default function Contract() {
 
               <div className='row submit'>
                 <div className='input'>
-                  {isConnected && <button type="submit" className='submit'>Run</button>}
+                  {isConnected && <button type="submit" className='submit' disabled={executionStatus==ExecutionStatus.EXECUTING}>
+                    {executionStatus==ExecutionStatus.EXECUTING ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : "Run"}
+                    </button>}
                   {!isConnected && <Web3Button />}
                 </div>
               </div>

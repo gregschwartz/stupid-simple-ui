@@ -141,7 +141,7 @@ contract Escrow {
 
 
   return (
-    isRedirecting? <CoolRedirect /> :
+    isRedirecting ? <CoolRedirect /> :
     <>
     <div className='descriptionHeader'>
       <div className='logo'>

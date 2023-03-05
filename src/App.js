@@ -44,12 +44,8 @@ function App() {
         <Web3Modal
         projectId="6469fc0f92c76b3fb593c78ff3fd92c7"
         ethereumClient={ethereumClient}
-        themeColor='purple'
+        themeColor="magenta"
         />
-        {/* themeMode?: 'dark' | 'light';
-        themeColor?: 'blackWhite' | 'blue' | 'default' | 'green' | 'magenta' | 'orange' | 'purple' | 'teal';
-        themeBackground?: 'gradient' | 'themeColor';
-        themeZIndex?: number; */}
       </header>
       <div className='main'>
           <ConvexProvider client={convex}>
