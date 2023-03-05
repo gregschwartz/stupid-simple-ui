@@ -10,6 +10,8 @@ import { Web3Button, useWeb3Modal } from "@web3modal/react";
 import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
 
+import './Contract.css';
+
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};
 //   let htmlType = "text";
@@ -21,7 +23,7 @@ import { useWeb3ModalTheme } from "@web3modal/react";
 //     options["maxlength"]=42
 //   }
 //
-//   return <div className='formInput'>
+//   return <div className='input'>
 //     {/* {options.map((k) => {
 //       return (k);
 //     })} */}
@@ -45,13 +47,15 @@ interface Contract  {
   contractAbi: any;
   contractCode: string;
   themeId: Id<"themes">;
+  themeNameForWalletConnect: string;
   numViews: number;
 }
 
 export default function Contract() {
   const { wagmiClient, chains } = useWagmi()
   const { address, isConnected } = useAccount();
-  const { theme, setTheme } = useWeb3ModalTheme();
+  const { setTheme } = useWeb3ModalTheme();
+  const [styleTagForTheme, setStyleTagForTheme] = useState("");
 
   const { chainName, contractAddress } = useParams();
   
@@ -68,6 +72,7 @@ export default function Contract() {
     contractAbi: `{"_format":"hh-sol-artifact-1","contractName":"Foo","sourceName":"contracts/Foo.sol","abi":[{"inputs":[{"internalType":"bytes3[2]","name":"","type":"bytes3[2]"}],"name":"bar","outputs":[],"stateMutability":"pure","type":"function"}]}`,
     contractCode: "",
     themeId: new Id("themes", ""),
+    themeNameForWalletConnect: "default",
     numViews: 0
   };
 
@@ -117,27 +122,10 @@ export default function Contract() {
 
       setRecord(result[0]);
       setIsloading(false);
-      //set color in WalletConnect
-      if(result[0].themeNameForWalletConnect?.length > 0) {
-        const c = result[0].themeNameForWalletConnect;
-        console.log("set walletConnect button to ", c);
 
-        //🤢 have to use this lunatic method because of the way WalletConnect coded it to only allow specific color values!
-        if(c == "blackWhite") {
-          setTheme({themeColor: "blackWhite"});
-        } else if(c == "blue") {
-          setTheme({themeColor: "blue"});
-        } else if(c == "green") {
-          setTheme({themeColor: "green"});
-        } else if(c == "magenta") {
-          setTheme({themeColor: "magenta"});
-        } else if(c == "orange") {
-          setTheme({themeColor: "orange"});
-        } else if(c == "purple") {
-          setTheme({themeColor: "purple"});
-        } else if(c == "teal") {
-          setTheme({themeColor: "teal"});
-        }
+      //set color in WalletConnect and other themes
+      if(result[0].themeNameForWalletConnect?.length > 0) {
+        setThemeColor(result[0].themeNameForWalletConnect);
       }
     }
 
@@ -150,17 +138,12 @@ export default function Contract() {
   
 
   //TODO: add support for an ID in the URL, and then use that one instead!
-  //const record = result[0];
-  //setRecord(result[0]);
   const abi = JSON.parse(record.contractAbi);
-  //const contractName = record.name;
-  //setContractName(record.name);
 
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
   let contract = new ethers.Contract(contractAddress, abi.abi, provider);
 
-  
   const connectWallet = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
@@ -180,7 +163,7 @@ export default function Contract() {
 
       //check if it is a transaction in-progress hash instead of data
       if(Array.isArray(result)) {
-        html = `
+        html = `Response:<br />
           <table>
             <thead>
               <tr>
@@ -207,6 +190,61 @@ export default function Contract() {
       cell.innerHTML = html;
     } else {
       alert("Cannot find where to show result, which is: " + result);
+    }
+  }
+  
+  function rotateTheme() {
+    const themeList = ["default", "blue", "green", "magenta", "orange", "purple", "blackWhite", "teal"];   
+
+    const index = Math.floor(Math.random() * themeList.length);
+    setThemeColor(themeList[index]);
+  }
+
+  function setThemeColor(themeName) {
+    let backgroundColor = "";
+    let textColor = "white";
+
+    //🤢 have to use this lunatic method because of the way WalletConnect coded it to only allow specific color values!
+    if(themeName == "blackWhite") {
+      setTheme({themeColor: "blackWhite"});
+      backgroundColor = "white";
+      textColor = "black";
+    } else if(themeName == "blue") {
+      setTheme({themeColor: "blue"});
+      backgroundColor = "rgb(81,109,251)";
+    } else if(themeName == "green") {
+      setTheme({themeColor: "green"});
+      backgroundColor = "rgb(38,217,98)";
+    } else if(themeName == "magenta") {
+      setTheme({themeColor: "magenta"});
+      backgroundColor = "rgb(203,77,140)";
+    } else if(themeName == "orange") {
+      setTheme({themeColor: "orange"});
+      backgroundColor = "rgb(255,166,76)";
+    } else if(themeName == "purple") {
+      setTheme({themeColor: "purple"});
+      backgroundColor = "rgb(144,110,247)";
+    } else if(themeName == "teal") {
+      setTheme({themeColor: "teal"});
+      backgroundColor = "rgb(54,226,226)";
+    } else { //default
+      setTheme({themeColor: "default"});
+      backgroundColor = "rgb(71,161,255)";
+    }
+
+    setStyleTagForTheme(`
+    header a, .contractPage h1 { color: ${backgroundColor} !important; }
+    header #colorSquare, button {
+      background: ${backgroundColor} !important;
+      color: ${textColor} !important;
+    }
+    input { border: 1px solid ${backgroundColor} !important; }
+    `);
+
+    document.body.onkeydown = (event) => {
+      if(event.key === 'Alt'){
+        rotateTheme();
+      }
     }
   }
 
@@ -266,9 +304,8 @@ export default function Contract() {
 
   return (
     isLoading? <CoolLoading/> :
-    <div>
+    <div className="contractPage">
       <h1 onClick={() => setEditing(true)}>
-        {/* {contractName} */}
         <Editable
           text={record.name}
           placeholder="My contract name"
@@ -285,77 +322,90 @@ export default function Contract() {
             onChange={handleNameChange}
           />
         </Editable>
-        </h1>
-      <div className='container'>
-        <div className='formSection'>
-          {abi.abi.map((functionOrObject) => {
-            if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
-      
-            return (
-              <form onSubmit={handleSubmit} className='solidityForm' name={functionOrObject.name} key={functionOrObject.name}>
-                <h2 style={{"color":"Black"}}>{functionOrObject.name}</h2>
+      </h1>
 
-                {(functionOrObject.stateMutability === "payable" ? (
-                  <div className='addressSection formRow'>
-                    <div className='formLabel'>
-                      <label htmlFor="contractAddres">Amount</label> 
-                    </div>
-                    {/* <Field name="Amount" type="uint256" internalType="uint256" /> */}
-                    <input type="number" id="amount" name="amount" className='amount' required />   
+      <div className='formSection'>
+        {abi.abi.map((functionOrObject) => {
+          if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
+    
+          return (
+            <form onSubmit={handleSubmit} name={functionOrObject.name} key={functionOrObject.name}>
+              <h2>{functionOrObject.name}</h2>
+
+              {(functionOrObject.stateMutability === "payable" ? (
+                <div className='addressSection row'>
+                  <div className='label'>
+                    <label htmlFor="contractAddres">Amount in Ether (not wei)</label> 
                   </div>
-                ) : "")}
-
-                {functionOrObject.inputs.map((input) => {
-                  return (
-                    <div className='addressSection formRow' key={input.name}>
-                      <div className='formLabel'>
-                        <label htmlFor="contractAddres">{input.name}</label> 
-                      </div>
-                      <div className='formInput'>
-                        <input type="text" id="contractAddres" name="contractAddres" className='contractAddress' required />   
-                      </div>                                          
-                    </div>
-                  );
-                })}
-
-                <div className='formRow'>
-                  <div className='formLabel'>
-                    <></>
-                  </div>
-                  <div className='formInput'>
-                    {isConnected && <button type="submit" className='submit'>Submit</button>}
-                    {!isConnected && <Web3Button />}
+                  <div className='input'>
+                    <input type="number" id="amount" name="amount" className='amount' placeholder="Amount of Eth" required />
                   </div>
                 </div>
-                
-                {functionOrObject.outputs.map((output) => {
-                  return ( 
-                    <div className='formRow response' key={output.type}>
-                      <div className='formLabel'>
-                        <></>
-                      </div>
-                      <div className='formInput responseCell'>
-                        {output.name ? output.name : "Returns"}: {output.type}
-                      </div>
-                    </div>
-                  );
-                })}
+              ) : "")}
 
-                {functionOrObject.outputs.length === 0 &&
-                    <div className='formRow response'>
-                      <div className='formLabel'>
-                        <></>
-                      </div>
-                      <div className='formInput responseCell'>
-                        Returns a value
-                      </div>
-                    </div>
+              {functionOrObject.inputs.map((input) => {
+                let placeholder = input.type;
+                if(input.type == "address" || input.type == "address payable") {
+                  placeholder = "0xabc123...";
+                } else if(input.type == "string") {
+                  placeholder = "Letters";
                 }
-              </form>
-            );
-          })}
-        </div>
+
+                let name = input.prettyName ?? input.name ?? "id";
+
+                //remove the underscore, it's common practice to use in the context of setting a class variable
+                if(name[0] == "_") { name = name.substring(1); }
+                
+                return (
+                  <div className='row' key={name}>
+                    <div className='label'>
+                      <label htmlFor={input.name}>{name}</label> 
+                    </div>
+                    <div className='input'>
+                      <input type="text" name={input.name} placeholder={placeholder} required />
+                    </div>   
+                  </div>
+                );
+              })}
+
+              <div className='row submit'>
+                <div className='input'>
+                  {isConnected && <button type="submit" className='submit'>Run</button>}
+                  {!isConnected && <Web3Button />}
+                </div>
+              </div>
+              
+              {functionOrObject.outputs.map((output) => {
+                return (
+                  <div className='row response' key={output.type}>
+                    <div className='label'>
+                      <></>
+                    </div>
+                    <div className='input responseCell'>
+                      {output.name ? output.name : "Returns"}: {output.type}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {functionOrObject.outputs.length === 0 &&
+                  <div className='row response'>
+                    <div className='label'>
+                      <></>
+                    </div>
+                    <div className='input responseCell'>
+                      Returns information
+                    </div>
+                  </div>
+              }
+            </form>
+          );
+        })}
+
       </div>
+      <style>
+        {styleTagForTheme}
+      </style>
     </div>
   );
 }

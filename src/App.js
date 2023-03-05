@@ -26,6 +26,7 @@ function App() {
     <WagmiConfig client={wagmiClient}>
     <div className="App">
       <header className='appHeader'>
+        <div id="colorSquare" />
         <h1>
           <a href="/">Stupid Simple UI</a>
         </h1>
