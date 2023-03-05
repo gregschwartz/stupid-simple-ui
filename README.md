@@ -1,6 +1,23 @@
-# Stupid Simple UI
+# Stupid Simple UI - Automagic UI for Smart Contracts
 
-Automatically generate and host a front-end for any Solidity contract!
+At ETHDenver the most requested teammate was Front End Developer. In general, most smart contract developers don't know front-end development, and they shouldn't have to. 
+
+So meet StupidSimpleUI: an automagical UI builder for smart contracts. 
+
+- Provide your smart contract.
+- We make and host a beautiful customizable UI that you can immediately share.
+- No need to learn React, web hosting, domain management, or even CSS!
+
+## Steps
+
+1. Input contract details
+2. Connect your wallet to publish
+3. Share your new UI!
+
+## Presentation
+https://drive.google.com/file/d/1hXAHlFCoIlkXnXv4xlslKyUPrKXeW2a9/view
+
+
 
 ## Set Up And Start
 
@@ -19,9 +36,3 @@ Automatically generate and host a front-end for any Solidity contract!
 
 ## Building On Vercel
 Command should be `npm run prodBuild`
-
-## Coming soon: `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
