@@ -1,7 +1,6 @@
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent, useRef } from "react";
 import { useParams } from "react-router-dom";
 import CoolLoading from '../components/coolLoading/CoolLoading';
-
 import { ethers } from "ethers";
 import { Id } from "../convex/_generated/dataModel"
 import { useMutation, useQuery } from "../convex/_generated/react";
@@ -55,8 +54,9 @@ export default function Contract() {
   const { theme, setTheme } = useWeb3ModalTheme();
 
   const { chainName, contractAddress } = useParams();
-
-  const [contractName, setContractName] = useState('');
+  
+  const [isEditing, setEditing] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
 
   let oContract: Contract = {
     _id: new Id("contracts", ""),
@@ -72,6 +72,7 @@ export default function Contract() {
   };
 
   const [record, setRecord] = useState(oContract);
+  const inputRef = useRef();
 
   //automatically ask to switch to the relevant chain
   const { setDefaultChain } = useWeb3Modal();
@@ -82,9 +83,7 @@ export default function Contract() {
   });
   
   let getByFunc = useQuery("contracts:getBy", chainName, contractAddress);
-
-  //show loader instead of always showing the error until it loads
-  
+ 
   useEffect(() => {
 
     const loadContract = async() => {
@@ -117,8 +116,7 @@ export default function Contract() {
       }
 
       setRecord(result[0]);
-      setContractName(record.name);
-
+      setIsloading(false);
       //set color in WalletConnect
       if(result[0].themeNameForWalletConnect?.length > 0) {
         const c = result[0].themeNameForWalletConnect;
@@ -143,9 +141,11 @@ export default function Contract() {
       }
     }
 
-    loadContract();
+    if(!isEditing){
+      loadContract();
+    }    
 
-  }, [chainName, contractAddress, record.name, getByFunc]);
+  }, [chainName, contractAddress, record.name, getByFunc, isEditing]);
 
   
 
@@ -210,6 +210,17 @@ export default function Contract() {
     }
   }
 
+  const handleNameChange = (e) => {
+    e.preventDefault();
+
+    setRecord({
+      ...record,
+      name : e.target.value
+    });
+    console.log("changing name")
+    console.log(record);
+  }
+
   const handleSubmit = async (event: FormEvent) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
@@ -254,20 +265,24 @@ export default function Contract() {
   }
 
   return (
+    isLoading? <CoolLoading/> :
     <div>
-      <h1>
+      <h1 onClick={() => setEditing(true)}>
         {/* {contractName} */}
         <Editable
-          text={contractName}
-          placeholder="Write a contract name"
+          text={record.name}
+          placeholder="My contract name"
+          childRef={inputRef}
           type="input"
+          onChange={handleNameChange}
         >
           <input
-          type="text"
-          name="contractName"
-          placeholder="Write a contract name"
-          value={contractName}
-          onChange={e => setContractName(e.target.value)}
+            ref={inputRef}
+            type="text"
+            name="contractName"
+            placeholder="My contract name"
+            value={record.name}
+            onChange={handleNameChange}
           />
         </Editable>
         </h1>
