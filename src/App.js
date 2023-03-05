@@ -32,7 +32,9 @@ function App() {
         </h1>
         <div className='examples'>
           Examples:{" "}
-          <a href="/contracts/Goerli/0xDB0d5dB07d42D5589230e40c3A51Ac8454D312d3">Guestbook</a>
+          <a href="https://www.stupidsimpleui.com/contracts/Chain%2084531/0x8b2948d486336e9ecAe12D570469D0C62CdcbaC1">Base: Guestbook</a>
+          {" | "}
+          <a href="/contracts/Goerli/0xDB0d5dB07d42D5589230e40c3A51Ac8454D312d3">Goerli: Guestbook</a>
           {" | "}
           <a href="/contracts/goerli/0xcaFAa9C9662f2a7EaeceD891C039317035286540">Escrow</a>
           {" | "}
