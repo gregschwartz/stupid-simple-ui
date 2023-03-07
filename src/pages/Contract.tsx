@@ -61,7 +61,7 @@ export enum ExecutionStatus {
 }
 
 export default function Contract() {
-  const { wagmiClient, chains } = useWagmi()
+  const { chains } = useWagmi()
   const { address, isConnected } = useAccount();
   const { setTheme } = useWeb3ModalTheme();
   const [styleTagForTheme, setStyleTagForTheme] = useState("");
@@ -158,7 +158,7 @@ export default function Contract() {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    const walletAddress = await signer.getAddress();
+    // const walletAddress = await signer.getAddress();
     // console.log(`connectWallet address '${walletAddress}'`);
     return contract.connect(signer);
   };
@@ -225,26 +225,26 @@ export default function Contract() {
     let textColor = "white";
 
     //🤢 have to use this lunatic method because of the way WalletConnect coded it to only allow specific color values!
-    if(themeName == "blackWhite") {
+    if(themeName === "blackWhite") {
       setTheme({themeColor: "blackWhite"});
       backgroundColor = "white";
       textColor = "black";
-    } else if(themeName == "blue") {
+    } else if(themeName === "blue") {
       setTheme({themeColor: "blue"});
       backgroundColor = "rgb(81,109,251)";
-    } else if(themeName == "green") {
+    } else if(themeName === "green") {
       setTheme({themeColor: "green"});
       backgroundColor = "rgb(38,217,98)";
-    } else if(themeName == "magenta") {
+    } else if(themeName === "magenta") {
       setTheme({themeColor: "magenta"});
       backgroundColor = "rgb(203,77,140)";
-    } else if(themeName == "orange") {
+    } else if(themeName === "orange") {
       setTheme({themeColor: "orange"});
       backgroundColor = "rgb(255,166,76)";
-    } else if(themeName == "purple") {
+    } else if(themeName === "purple") {
       setTheme({themeColor: "purple"});
       backgroundColor = "rgb(144,110,247)";
-    } else if(themeName == "teal") {
+    } else if(themeName === "teal") {
       setTheme({themeColor: "teal"});
       backgroundColor = "rgb(54,226,226)";
     } else { //default
@@ -369,16 +369,16 @@ export default function Contract() {
 
               {functionOrObject.inputs.map((input) => {
                 let placeholder = input.type;
-                if(input.type == "address" || input.type == "address payable") {
+                if(input.type === "address" || input.type === "address payable") {
                   placeholder = "0xabc123...";
-                } else if(input.type == "string") {
+                } else if(input.type === "string") {
                   placeholder = "Letters";
                 }
 
                 let name = input.prettyName ?? titleCaseSentence(input.name) ?? "Id";
 
                 //remove the underscore, it's common practice to use in the context of setting a class variable
-                if(name[0] == "_") { name = name.substring(1); }
+                if(name[0] === "_") { name = name.substring(1); }
                 
                 return (
                   <div className='row' key={name}>
@@ -394,8 +394,8 @@ export default function Contract() {
 
               <div className='row submit'>
                 <div className='input'>
-                  {isConnected && <button type="submit" className='submit' disabled={executionStatus==ExecutionStatus.EXECUTING}>
-                    {executionStatus==ExecutionStatus.EXECUTING ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : "Run"}
+                  {isConnected && <button type="submit" className='submit' disabled={executionStatus===ExecutionStatus.EXECUTING}>
+                    {executionStatus===ExecutionStatus.EXECUTING ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" alt="Executing..." /> : "Run"}
                     </button>}
                   {!isConnected && <Web3Button />}
                 </div>
