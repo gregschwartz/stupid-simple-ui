@@ -60,3 +60,9 @@
   margin: 0 auto;
   text-align: left;
 }
+
+.contractPage .loadingEthereum {
+  background: white;
+  border-radius: 100%;
+  padding: 3px;
+}
