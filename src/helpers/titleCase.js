@@ -17,7 +17,7 @@ export function titleCaseSentence(s) {
         words.push(letter);
       }
       lastLetterWasCapital = true;
-    } else if (letter == "-" || letter == "_" || letter == " ") {
+    } else if (letter === "-" || letter === "_" || letter === " ") {
       //if underscore, dash, or space: start new word with this letter
       words.push("");
       lastLetterWasCapital = false;
@@ -29,7 +29,7 @@ export function titleCaseSentence(s) {
   }
 
   words = words.map(function(word) {
-    if(word.length == 0) {return "";}
+    if(word.length === 0) {return "";}
     return word[0].toUpperCase() + word.slice(1);
   });
 

@@ -12,7 +12,7 @@ import './New.css';
 
 export default function Home() {
 
-  const { wagmiClient, ethereumClient, chains } = useWagmi()
+  const { wagmiClient, ethereumClient /*, chains */ } = useWagmi()
   console.log({ wagmiClient, ethereumClient })
   //wrap the db function
   const addFunction = useMutation("contracts:add");

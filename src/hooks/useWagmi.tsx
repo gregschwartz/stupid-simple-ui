@@ -1,7 +1,7 @@
 import { EthereumClient, modalConnectors, walletConnectProvider } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
+//import { Web3Modal } from "@web3modal/react";
 import { useMemo, useState } from "react";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient /*, WagmiConfig */ } from "wagmi";
 import { goerli, arbitrum, mainnet, polygon } from "wagmi/chains";
 
 export const useWagmi = () => {

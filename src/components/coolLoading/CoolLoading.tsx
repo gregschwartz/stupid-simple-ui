@@ -1,4 +1,3 @@
-import React, { useState, useEffect, useRef } from "react";
 import "./coolloading.css";
 
 export default function CoolLoading() {
