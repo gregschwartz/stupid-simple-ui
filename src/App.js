@@ -2,6 +2,7 @@ import './App.css';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
+import {Helmet} from "react-helmet";
 
 //pages
 import Contract from "./pages/Contract";
@@ -24,6 +25,12 @@ function App() {
   
   return (
     <>
+    <Helmet>
+      <meta charSet="utf-8" />
+      <title>Stupid Simple UI: Automagic UI and Hosting for Smart Contracts</title>
+      <meta name="description" content="Provide your smart contract. We make and host a beautiful customizable UI that you can immediately share. No need to learn React, or even CSS!" />
+    </Helmet>
+    
     <WagmiConfig client={wagmiClient}>
     <div className="App">
       <header className='appHeader'>

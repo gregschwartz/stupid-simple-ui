@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FormEvent, useRef } from "react";
+import {Helmet} from "react-helmet";
 import { useParams } from "react-router-dom";
 import CoolLoading from '../components/coolLoading/CoolLoading';
 import { ethers } from "ethers";
@@ -329,6 +330,11 @@ export default function Contract() {
   return (
     isLoading? <CoolLoading/> :
     <div className="contractPage prettyBackground">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{record.name}, powered by Stupid Simple UI -- Automagic UI and Hosting for Smart Contracts</title>
+        <meta name="description" content={`${record.name} is powered by StupidSimpleUI.com Provide your smart contract. We make and host a beautiful customizable UI that you can immediately share. No need to learn React, or even CSS!`} />
+      </Helmet>
       <h1 onClick={() => setEditing(true)}>
         <Editable
           text={record.name}
