@@ -1,4 +1,4 @@
-import "./coolloading.css";
+import "./coolloading.scss";
 
 export default function CoolLoading() {
 

@@ -1,3 +1,6 @@
+@import "~bootstrap/scss/bootstrap";
+
+
 body, .App header h1 a {
   color: #EFE9F4;
 }
@@ -61,7 +64,7 @@ body, .App header h1 a {
 }
 
 .prettyBackground {
-  background-image: url("/public/background.png");
+  background-image: url("../public/background.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

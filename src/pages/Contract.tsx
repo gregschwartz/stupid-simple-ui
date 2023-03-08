@@ -12,7 +12,7 @@ import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
 import { titleCaseSentence } from '../helpers/titleCase';
 
-import './Contract.css';
+import './Contract.scss';
 
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};

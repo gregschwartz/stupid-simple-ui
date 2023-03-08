@@ -8,7 +8,7 @@ import CoolRedirect from '../components/coolRedirect/CoolRedirect';
 import { useWagmi } from '../hooks/useWagmi';
 import { titleCaseSentence } from '../helpers/titleCase';
 
-import './New.css';
+import './New.scss';
 
 export default function Home() {
 

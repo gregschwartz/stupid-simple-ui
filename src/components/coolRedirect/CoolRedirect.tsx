@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./spinner.css";
+import "./spinner.scss";
 
 export default function CoolRedirect() {
 

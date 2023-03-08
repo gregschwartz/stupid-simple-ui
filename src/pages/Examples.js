@@ -1,4 +1,4 @@
-import './Examples.css'
+import './Examples.scss'
 
 function Examples() {
   
