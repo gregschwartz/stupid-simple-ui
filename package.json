@@ -17,8 +17,8 @@
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "react-scripts": "5.0.1",
     "react-router-dom": "^6.8.2",
+    "react-scripts": "5.0.1",
     "sass": "^1.58.3",
     "wagmi": "^0.11.7",
     "web-vitals": "^2.1.4"
@@ -49,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "hardhat": "^2.13.0"
   }
 }
