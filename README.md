@@ -17,7 +17,19 @@ So meet StupidSimpleUI: an automagical UI builder for smart contracts.
 ## Presentation
 https://drive.google.com/file/d/1hXAHlFCoIlkXnXv4xlslKyUPrKXeW2a9/view
 
+# Hardhat testing
 
+I added a symlink of `.env` -> `.env.local`, but I'm not sure if it'll work with Git. So you might need to make a `.env` file yourself.
+
+Either way, you'll need to add a value of `REACT_APP_GOERLI_PRIVATE_KEY`.
+
+Then run `npx hardhat test` to run the tests locally. 
+
+# Hardhat deployment
+
+Run `npx hardhat run scripts/deploy.js --network goerli` to deploy all the scripts. Then use those addresses on the Stupid Simple UI to interact with those contracts. Examples are also linked in the nav bar.
+
+# Running locally
 
 ## Set Up And Start
 
