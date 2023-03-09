@@ -6,147 +6,111 @@ body, .newFormWrapper textarea, .newFormWrapper input[type=text] {
   background-color: #171D1C;
 }
 
-.newFormWrapper {
-  padding: 30px 0 50px 0;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .descriptionHeader, .descriptionBullets {
-  display: flex;
-  align-items: flex-end;
-  flex: 1;
-  flex-direction: row;
   margin-bottom: 10vh;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .descriptionHeader {
   padding-bottom: 30px;
-}
 
-.descriptionHeader .logo {
-  width: 30%;
-}
+    .logo img {
+    width: 100%;
+    max-height: 150px;
+    max-width: 150px;
+  }
 
-.descriptionHeader .logo img {
-  height: 200px;
+  .content {
+    text-align: left;
+    height: 200px; 
+    
+    h2 {
+      font-size: 30px;
+    }
+    
+    p {
+      line-height: 1.9em;
+      opacity: 0.9;
+    }
+  }
 }
-
-.descriptionHeader .content {
-  width: 70%;
-  text-align: left;
-  height: 200px;
-  margin: auto 40px;
-}
-
-.descriptionHeader .content h2 {
-  font-size: 30px;
-}
-
-.descriptionHeader .content p {
-  line-height: 1.9em;
-  opacity: 0.9;
-}
-
+  
 .descriptionBullets {
   margin: 10px auto 40px;
-justify-content: center;
+  justify-content: center;
+
+  div {
+    height: 10px;
+    width: 250px;
+    text-align: center;
+    background-repeat: no-repeat;
+    padding: 135px 5px 70px;
+  }
+
+  .num1 { background-image: url("../../public/box1.png"); }
+  .num2 { background-image: url("../../public/box2.png"); }
+  .num3 { background-image: url("../../public/box3.png"); }
 }
 
-.descriptionBullets div {
-  height: 10px;
-  width: 250px;
-  text-align: center;
-  background-repeat: no-repeat;
-  padding: 135px 5px 70px;
-}
-
-.descriptionBullets .num1 { background-image: url("../../public/box1.png"); }
-.descriptionBullets .num2 { background-image: url("../../public/box2.png"); }
-.descriptionBullets .num3 { background-image: url("../../public/box3.png"); }
-
-
-form .row button {
-  background: linear-gradient(90.67deg, rgba(0, 0, 0, 0.4) -0.25%, rgba(0, 0, 0, 0) 100.37%), #2835F6;
-  border: none;
-  color: white;
-}
-
-.newFormWrapper, form .row button, .newFormWrapper textarea, .newFormWrapper input[type=text] {
+.newFormWrapper, .newFormWrapper button, .newFormWrapper textarea, .newFormWrapper input {
   border-radius: 10px;
 }
 
-.newFormWrapper h2 {
-  margin: 0;
-  padding: 20px 0 0 0;
-  font-size: 2em;
-}
+.newFormWrapper {
+  padding-bottom: 50px;
+  
+  h2 {
+    padding: 20px 0 0 0;  
+    font-size: 2em;
+  }  
 
-.newFormWrapper .description {
-  margin: 0 12vw 2em;
-  padding: 0;
-  opacity: 0.8;
-}
+  form .row {
+    margin: 15px auto;
+    text-align: left;
 
-.form {
-  display: flex;
-  justify-content: center;
-  flex: 1;
-  flex-direction: row;
- 
-}
+    textarea, button {
+      width: 100%;
+    }
 
-form .row {
-  max-width: 500px;
-  min-width: 80%;
-  margin: 10px auto;
-}
+    input {
+      width: min(100%,420px);
+    }
 
-form .row .label, form .row .input {
-  text-align: left;
-}
+    .chainName {
+      margin-left: 5px;
+    }
 
-form .row textarea, form .row button {
-  width: 100%;
-}
+    textarea {
+      height: min(300px, 75vh);
+      max-height: 75vh;
+      font-size: 1.2em;
+    }
 
-form .row input {
-  width: min(100%,420px);
-}
+    textarea, input {
+      background-color: #171D1C;
+      color: #ffffff;
+      border: 1px solid #9DA3FB;
+      padding: 5px;
+    }
 
-form .row .chainName {
-  margin-left: 5px;
-}
+    textarea::placeholder, input[type=text]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #555555;
+      opacity: 1; /* Firefox */
+    }
 
-form .row textarea {
-  height: min(300px, 75vh);
-  max-height: 75vh;
-  font-size: 1.2em;
-}
+    textarea:-ms-input-placeholder, input[type=text]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #555555;
+    }
 
-.newFormWrapper textarea, .newFormWrapper input[type=text] {
-  background-color: #171D1C;
-  color: #ffffff;
-  border: 1px solid #9DA3FB;
-  padding: 5px;
-}
+    textarea::-ms-input-placeholder, input[type=text]::-ms-input-placeholder { /* Microsoft Edge */
+      color: #555555;
+    }
 
-.newFormWrapper textarea::placeholder, .newFormWrapper input[type=text]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #555555;
-  opacity: 1; /* Firefox */
-}
-
-.newFormWrapper textarea:-ms-input-placeholder, .newFormWrapper input[type=text]:-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #555555;
-}
-
-.newFormWrapper textarea::-ms-input-placeholder, .newFormWrapper input[type=text]::-ms-input-placeholder { /* Microsoft Edge */
-  color: #555555;
-}
-
-form .row button {
-  font-size: 1.5em;
-  height: min(2em, 20vh);
+    button {
+      background: linear-gradient(90.67deg, rgba(0, 0, 0, 0.4) -0.25%, rgba(0, 0, 0, 0) 100.37%), #2835F6;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      height: min(2em, 20vh);
+    }
+  }
 }

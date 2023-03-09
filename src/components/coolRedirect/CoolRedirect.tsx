@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./spinner.scss";
+import "./CoolRedirect.scss";
 
 export default function CoolRedirect() {
 
@@ -27,14 +27,14 @@ export default function CoolRedirect() {
  }, [checks, counter]);
 
   return (
-    <div className='container'>
-    <div className='container'>
+    <div className='CoolRedirectContainer'>
+    <div className='CoolRedirectContainer'>
       <div className="spinner-container">
         <div className="loading-spinner">
         </div>
       </div>
     </div>
-    <div className='container'>
+    <div className='CoolRedirectContainer'>
       <div className="checkListContainer" ref={divRef}>
         <div className="checkListItem">
           <div className={`checkboxItem  ${checks[0] ? "visible" : "unvisible"}`}>✅</div>
