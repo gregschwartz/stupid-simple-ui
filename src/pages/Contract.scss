@@ -2,6 +2,11 @@
   color: #EFE9F4;
 }
 
+.contractPage, .contractPage input, .contractPage button {
+  border-radius: 10px;
+}
+
+
 .contractPage {
 
   form {
@@ -20,7 +25,6 @@
     color: #ffffff;
     border: 1px solid #9DA3FB;
     padding: 5px;
-    border-radius: 10px;
     width: min(700px, 100%);
   }
 
@@ -42,6 +46,7 @@
     border: none;
     color: white;
     width: 50%;
+    margin-top: 6px;
   }
 
   .submit .input, .response .input {
