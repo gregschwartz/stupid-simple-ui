@@ -22,6 +22,7 @@ function Examples() {
       <div>
         <h3>Ethereum</h3>
         <ul>
+          <li><a href="/contracts/Ethereum/0x84FA8f52E437Ac04107EC1768764B2b39287CB3e">Contract with security issues (100% taxes, can prevent transfers)</a></li>
           <li><a href="/contracts/Ethereum/0xE5C26b21F34fbb63f759E82f3fD1A2ea575Ed5D8">Contract with security issues (honeypot)</a></li>
         </ul>
       </div>

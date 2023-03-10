@@ -1,13 +1,5 @@
 import {useEffect, useState} from 'react';
 
-//had to remove because I couldn't figure out how to share the lookup array between the two functions
-// export function chainCanBeSecurityChecked(chainName) {
-//   const good = (chainIds[chainName.toLowerCase()] !== undefined);
-//   console.log("chainCanBeSecurityChecked, chain", chainName, "Id:", chainIds[chainName], "is undefined", (chainIds[chainName]==undefined));
-//   return (good);
-// }
-
-
 export function parseResponseSecurityCheckApproval(data) {
   if(!data || !data.result) { return []; }
   
@@ -40,6 +32,43 @@ export function parseResponseSecurityCheckApproval(data) {
   return results;
 }
 
+export function parseResponseSecurityCheckToken(data, address) {
+  const MAX_ACCEPTABLE_TAX = 0.3;
+
+  if(!data || !data.result) { return []; }
+  
+  let results = [];
+  
+  for(var key in data.result) {
+    const response = data.result[key];
+    // console.log("response", response);
+
+    //high risk issues
+    if(response.is_true_token==="0") { results.push("Contract has been marked as a fake token!"); }
+    if(response.is_airdrop_scam==="1") { results.push("Contract has been marked as an airdrop scam!"); }
+    if(response.is_honeypot==="1") { results.push("Tokens [probably] cannot be sold!"); }
+    if(response.selfdestruct==="1") { results.push("Contract can self destruct, destroying all assets!"); }
+    if(response.transfer_pausable==="1") { results.push("Owner can prevent you from transfering tokens!"); }
+    if(response.owner_change_balance==="1") { results.push("Owner can alter any contract holders balance!"); }
+
+    //if buy or sell taxes are too high, flag it
+    if(response.buy_tax==="1") { results.push("Buy tax is 100%, therefore no tokens will actually be bought when putting Ether in"); }
+    else if(response.buy_tax >= MAX_ACCEPTABLE_TAX) { results.push(`Buy tax is extremely high: ${response.buy_tax}%. Likely a scam.`); }
+    if(response.sell_tax==="1") { results.push("Sell tax is 100%, therefore no tokens will actually be bought when putting Ether in"); }
+    else if(response.sell_tax >= MAX_ACCEPTABLE_TAX) { results.push(`Sell tax is extremely high: ${response.sell_tax}%. Likely a scam.`); }
+    
+    //more issues
+    if(response.hidden_owner===1) { results.push("Contract has a hidden owner"); }
+    if(response.personal_slippage_modifiable===1) { results.push("Contract owner can target specific users with higher taxes"); }
+    if(response.can_take_back_ownership===1) { results.push("Contract can "); }
+    if(response.cannot_sell_all===1) { results.push("Contract prevents you from selling all your assets at once"); }
+
+    //TODO: check if other_potential_risks key exists, and do something with that
+  }
+
+  return results;
+}
+
 export function SecurityCheck({chainName, contractAddress}) {
   //config
   const chainIds = {"ethereum": 1, "bsc": 56, "okc": 66, "heco": 128, "polygon": 137, "fantom":250, "arbitrum": 42161, "avalanche": 43114};
@@ -47,20 +76,23 @@ export function SecurityCheck({chainName, contractAddress}) {
   const [issues, setIssues] = useState([]);
 
   useEffect(()=>{
-    // console.log("start", chainName, contractAddress);
     const thisChainId = chainIds[chainName.toString().toLowerCase()];
     if(thisChainId === undefined) { setIssues([]); return; }
-    // console.log("thisChainId", thisChainId);
 
-    // console.log("fetch url ", `https://api.gopluslabs.io/api/v1/approval_security/${thisChainId}?contract_addresses=${contractAddress}`);
     fetch(`https://api.gopluslabs.io/api/v1/approval_security/${thisChainId}?contract_addresses=${contractAddress}`)
       .then(response => response.json())
       .then((data) => {
-        // console.log("data", data);
         const parsed = parseResponseSecurityCheckApproval(data);
-        // console.log("setIssues", parsed);
-        setIssues(parsed); 
+        setIssues(issues.concat(parsed));
       });
+
+      fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`)
+      .then(response => response.json())
+      .then((data) => {
+        const parsed = parseResponseSecurityCheckToken(data);
+        setIssues(issues.concat(parsed));
+      });
+
    }, [chainName, contractAddress]);
   
   if(issues.length === 0) {
