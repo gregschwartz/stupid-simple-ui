@@ -8,6 +8,26 @@
 
 
 .contractPage {
+  .securityIssues {
+    background: rgba(255,0,0,0.4);
+    border-radius: 12px;
+    padding: 5px;
+    max-width: 650px;
+    margin: 0 auto 40px;
+  }
+  
+  .securityIssues li {
+    text-align: left;
+  }
+  
+  .securityIssuesNone {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .securityIssuesNone, .securityIssuesNone a {
+    color: #ccc;
+  }
 
   form {
     padding: 40px 40px 30px;

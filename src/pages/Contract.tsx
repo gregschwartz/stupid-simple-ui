@@ -11,6 +11,7 @@ import { Web3Button, useWeb3Modal } from "@web3modal/react";
 import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
 import { titleCaseSentence } from '../helpers/titleCase';
+import { SecurityCheck } from "../helpers/securityCheck";
 
 import { Col, Container, Row } from "react-bootstrap";
 import './Contract.scss';
@@ -140,11 +141,10 @@ export default function Contract() {
         setThemeColor(result[0].themeNameForWalletConnect);
       }
     }
-
+    
     if(!isEditing){
       loadContract();
     }    
-
   }, [chainName, contractAddress, record.name, getByFunc, isEditing]);
 
   
@@ -330,7 +330,7 @@ export default function Contract() {
 
   return (
     isLoading? <CoolLoading/> :
-    <Container>
+    <Container className="contractPage">
       <Row>
         <Col xs={12}>
           <style>
@@ -341,6 +341,9 @@ export default function Contract() {
             <title>{record.name}, powered by Stupid Simple UI -- Automagic UI and Hosting for Smart Contracts</title>
             <meta name="description" content={`${record.name} is powered by StupidSimpleUI.com Provide your smart contract. We make and host a beautiful customizable UI that you can immediately share. No need to learn React, or even CSS!`} />
           </Helmet>
+
+          <SecurityCheck chainName={chainName} contractAddress={contractAddress} />
+
           <h1 onClick={() => setEditing(true)}>
             <Editable
               text={record.name}
@@ -363,7 +366,7 @@ export default function Contract() {
       </Row>
 
       <Row>
-        <Col xs={12} xl={{ span: 10, offset: 1 }} className="contractPage prettyBackground">
+        <Col xs={12} xl={{ span: 10, offset: 1 }} className="prettyBackground">
           {abi.abi.map((functionOrObject) => {
             if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
       
