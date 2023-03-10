@@ -7,6 +7,32 @@
 .contractPage, .contractPage h2 {
   color: #EFE9F4;
 }
+
+.contractPage h1 {
+  margin: 20px auto 0;
+}
+
+.contractPage .securityIssues {
+  background: rgba(255,0,0,0.4);
+  border-radius: 12px;
+  padding: 5px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.contractPage .securityIssues li {
+  text-align: left;
+}
+
+.contractPage .securityIssuesNone {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.contractPage .securityIssuesNone, .contractPage .securityIssuesNone a {
+  color: #ccc;
+}
+
 .contractPage form {
     /* Auto layout */
   display: flex;

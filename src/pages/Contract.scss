@@ -1,0 +1,96 @@
+.contractPage, .contractPage h2 {
+  color: #EFE9F4;
+}
+
+.contractPage, .contractPage input, .contractPage button {
+  border-radius: 10px;
+}
+
+
+.contractPage {
+  .securityIssues {
+    background: rgba(255,0,0,0.4);
+    border-radius: 12px;
+    padding: 5px;
+    max-width: 650px;
+    margin: 0 auto 40px;
+  }
+  
+  .securityIssues li {
+    text-align: left;
+  }
+  
+  .securityIssuesNone {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .securityIssuesNone, .securityIssuesNone a {
+    color: #ccc;
+  }
+
+  h1 {
+    margin: 0;
+  }
+
+  .addresses {
+    font-size: 0.8em;
+    color: gray;
+    margin-bottom: 10px;
+  }
+
+  form {
+    padding: 40px 40px 30px;
+    margin: 40px auto;
+    background: #1B1C1C;
+    border-radius: 12px;
+  }
+
+  form .row {
+    margin: 10px auto;
+  }
+
+  input {
+    background-color: #171D1C;
+    color: #ffffff;
+    border: 1px solid #9DA3FB;
+    padding: 5px;
+    width: min(700px, 100%);
+  }
+
+  textarea::placeholder, input[type=text]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #555555;
+    opacity: 1; /* Firefox */
+  }
+
+  textarea:-ms-input-placeholder, input[type=text]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #555555;
+  }
+
+  textarea::-ms-input-placeholder, input[type=text]::-ms-input-placeholder { /* Microsoft Edge */
+    color: #555555;
+  }
+
+  button {
+    background: linear-gradient(90.67deg, rgba(0, 0, 0, 0.4) -0.25%, rgba(0, 0, 0, 0) 100.37%), #2835F6;
+    border: none;
+    color: white;
+    width: 50%;
+    margin-top: 6px;
+  }
+
+  .submit .input, .response .input {
+    text-align: center;
+  }
+
+  .response table {
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .loadingEthereum {
+    background: white;
+    border-radius: 100%;
+    padding: 3px;
+  }
+}

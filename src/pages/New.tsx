@@ -8,11 +8,12 @@ import CoolRedirect from '../components/coolRedirect/CoolRedirect';
 import { useWagmi } from '../hooks/useWagmi';
 import { titleCaseSentence } from '../helpers/titleCase';
 
-import './New.css';
+import './New.scss';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export default function Home() {
 
-  const { wagmiClient, ethereumClient, chains } = useWagmi()
+  const { wagmiClient, ethereumClient /*, chains */ } = useWagmi()
   console.log({ wagmiClient, ethereumClient })
   //wrap the db function
   const addFunction = useMutation("contracts:add");
@@ -64,16 +65,16 @@ export default function Home() {
       return;
     }
 
-    let abiAsJson = {};
+    let abiAsJson;
     try {
       abiAsJson = JSON.parse(abiAsString);
     } catch (exception) {
       console.log("Exception converting ABI to JSON", exception);
       //below check will catch that the ABI is empty, so just drop through
     }
-
-    if(abiAsJson["abi"] === undefined || abiAsJson["abi"]?.length === 0) {
-      showError("ABI is not valid, please make sure you're copy and pasting it correctly. Particularly make sure it includes the subsection `abi` array.");
+  
+    if(abiAsJson === undefined || (abiAsJson['length'] !== undefined && abiAsJson?.length === 0) || (abiAsJson["abi"] !== undefined && abiAsJson["abi"]?.length === 0)) {
+      showError("ABI is not valid, please make sure you're copy and pasting it correctly. It must at least be an array of hashes representing each function and attribute.");
       return;
     }
 
@@ -81,8 +82,10 @@ export default function Home() {
     const contractName = (abiAsJson["contractName"]?.length > 0 ? titleCaseSentence(abiAsJson["contractName"]) : contractAddress);
 
     //remove the big chunks of data from the JSON, so it doesn't hit Convex's storage limit
-    abiAsJson["bytecode"] = "removed";
-    abiAsJson["deployedBytecode"] = "removed";
+    if(abiAsJson["bytecode"] !== undefined) {
+      abiAsJson["bytecode"] = "removed";
+      abiAsJson["deployedBytecode"] = "removed";
+    }
 
     setIsWritingToDb(true);
     const failureTimer = setTimeout(() => {
@@ -144,79 +147,82 @@ contract Escrow {
   return (
     isRedirecting ? <CoolRedirect /> :
     <>
-    <div className='descriptionHeader'>
-      <div className='logo'>
-        <img src="/logo.png" alt="Stupid Simple UI logo" />
-      </div>
-      <div className='content'>
-        <h2>Automagic UI for Smart Contracts</h2>
-        <p>
-          Provide your smart contract.<br />
-          We make and host a beautiful customizable UI that you can immediately share.<br />
-          No need to learn React, or even CSS!<br />
-        </p>
-      </div>
-    </div>
-    <div className='descriptionBullets'>
-      <div className='num1'>
+    <Container>
+      <Row className='descriptionHeader'>
+        <Col xs={12} sm={3} md={4} className='logo'>
+          <img src="/logo.png" alt="Stupid Simple UI logo" />
+        </Col>
+        <Col xs={12} sm={9} md={true} lg={true} className='content'>
+          <h2>Automagic UI & Hosting for Smart Contracts</h2>
+          <p>
+            Provide your smart contract.<br />
+            We make and host a beautiful customizable UI that you can immediately share.<br />
+            No need to learn React, or even CSS!<br />
+            <strong style={{"color": "rgb(203,77,140)"}}>Free until June 30, thanks to EthDenver!</strong>
+          </p>
+        </Col>
+      </Row>
+      <Row className='descriptionBullets'>
+        <Col className='num1'>
         1. Input Contract Details
-      </div>
-      <div className='num2'>
-        2. Connect Wallet
-      </div>
-      <div className='num3'>
-        3. Share your new UI!
-      </div>
-    </div>
-    <div className='newFormWrapper prettyBackground'>
-      <h2>Host My Contract</h2>
-      {/* <p className='description'>
-        There are very skilled devs that make smart contracts and hate making the UI, often things launch and people have to use etherscan.io to interact with them (either initially or forever). This allows devs to just focus on the contract for their dapp.
-      </p> */}
-      <form onSubmit={handleSubmit} className='solidityForm'>
-        <div className='addressSection row'>
-          <div className='label'>
-            <label htmlFor="contractAddress">Contract Address</label> 
+        </Col>
+        <Col className='num2'>
+          2. Connect Wallet
+        </Col>
+        <Col className='num3'>
+          3. Share your new UI!
+        </Col>
+      </Row>
+    
+      <Row>
+      <Col className='newFormWrapper prettyBackground' xs={12}>
+        <h2>Host My Contract</h2>
+        <form onSubmit={handleSubmit} className='solidityForm'>
+          <div className='addressSection row'>
+            <div className='label'>
+              <label htmlFor="contractAddress">Contract Address</label> 
+            </div>
+            <div className='input'>
+              <input type="text" id="contractAddress" name="contractAddress" className='contractAddress' required minLength={5} size={52} placeholder='0xa4e4745a1066ac0faebe4e005793b172c69cc9c4' />
+              <span className='chainName'>
+                {chain ? `${chain.name}` : ""}
+              </span>
+            </div>
           </div>
-          <div className='input'>
-            <input type="text" id="contractAddress" name="contractAddress" className='contractAddress' required minLength={5} size={52} placeholder='0xa4e4745a1066ac0faebe4e005793b172c69cc9c4' />
-            <span className='chainName'>
-              {chain ? `${chain.name}` : ""}
-            </span>
+          <div className='codeSection row'>
+            <div className='label'>
+              <label htmlFor="contractCode">Contract Code</label>
+            </div>
+            <div className='input'>
+              <textarea name="contractCode" id="contractCode" className='contractCode' rows={20} required placeholder={placeholderContractCode} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
+            </div>
           </div>
-        </div>
-        <div className='codeSection row'>
-          <div className='label'>
-            <label htmlFor="contractCode">Contract Code</label>
+          <div className='codeSection row'>
+            <div className='label'>
+              <label htmlFor="contractAbi">Contract ABI</label>
+            </div>
+            <div className='input'>
+              <textarea name="contractAbi" id="contractAbi" className='contractAbi' rows={20} required placeholder={placeholderAbi} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
+            </div>
           </div>
-          <div className='input'>
-            <textarea name="contractCode" id="contractCode" className='contractCode' rows={20} required placeholder={placeholderContractCode} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
+          <div className='submitSection row'>
+            <div className='label'>
+              <></>
+            </div>
+            <div className='input'>
+              {isConnected ? (
+                <button id="submitButton" type="submit" className='submit' disabled={isWritingToDb}>
+                  {isWritingToDb ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : "Host My Contract"}
+                </button>
+                ) : (
+                <Web3Button />
+              )}
+            </div>
           </div>
-        </div>
-        <div className='codeSection row'>
-          <div className='label'>
-            <label htmlFor="contractAbi">Contract ABI</label>
-          </div>
-          <div className='input'>
-            <textarea name="contractAbi" id="contractAbi" className='contractAbi' rows={20} required placeholder={placeholderAbi} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
-          </div>
-        </div>
-        <div className='submitSection row'>
-          <div className='label'>
-            <></>
-          </div>
-          <div className='input'>
-            {isConnected ? (
-              <button id="submitButton" type="submit" className='submit' disabled={isWritingToDb}>Host My Contract</button>
-              ) : (
-              <Web3Button />
-            )}
-            {isWritingToDb && <i>Writing to database...</i>}
-          </div>
-        </div>
-      </form>
-
-    </div>
+        </form>
+      </Col>
+      </Row>
+      </Container>
     </>
   )
 }

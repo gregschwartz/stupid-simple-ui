@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./coolloading.css";
+import "./coolloading.scss";
 
 export default function CoolLoading() {
 
   return (
-    <div className='container'>
-        <div className='container'>
+    <div className='CoolLoadingContainer'>
+        <div className='CoolLoadingContainer'>
         <div className="spinner-container">
             <div className="loading-spinner">
             </div>

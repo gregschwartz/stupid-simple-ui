@@ -3,8 +3,6 @@ import { titleCaseSentence } from './titleCase';
 let correct = "Live Long And Prosper";
 test('titleCaseSentence', () => {
   expect(titleCaseSentence("liveLongAndProsper")).toBe(correct);
-
-
   expect(titleCaseSentence("liveLong-AndProsper")).toBe(correct);
   expect(titleCaseSentence("liveLong_AndProsper")).toBe(correct);
 });

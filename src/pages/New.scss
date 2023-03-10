@@ -1,0 +1,116 @@
+body {
+  color: #EFE9F4;
+}
+
+body, .newFormWrapper textarea, .newFormWrapper input[type=text] {
+  background-color: #171D1C;
+}
+
+.descriptionHeader, .descriptionBullets {
+  margin-bottom: 10vh;
+}
+
+.descriptionHeader {
+  padding-bottom: 30px;
+
+    .logo img {
+    width: 100%;
+    max-height: 150px;
+    max-width: 150px;
+  }
+
+  .content {
+    text-align: left;
+    height: 200px; 
+    
+    h2 {
+      font-size: 30px;
+    }
+    
+    p {
+      line-height: 1.9em;
+      opacity: 0.9;
+    }
+  }
+}
+  
+.descriptionBullets {
+  margin: 10px auto 40px;
+  justify-content: center;
+
+  div {
+    height: 10px;
+    width: 250px;
+    text-align: center;
+    background-repeat: no-repeat;
+    padding: 135px 5px 70px;
+  }
+
+  .num1 { background-image: url("../../public/box1.png"); }
+  .num2 { background-image: url("../../public/box2.png"); }
+  .num3 { background-image: url("../../public/box3.png"); }
+}
+
+.newFormWrapper, .newFormWrapper button, .newFormWrapper textarea, .newFormWrapper input {
+  border-radius: 10px;
+}
+
+.newFormWrapper {
+  padding-bottom: 50px;
+  
+  h2 {
+    padding: 20px 0 0 0;  
+    font-size: 2em;
+  }  
+
+  form .row {
+    margin: 15px auto;
+    text-align: left;
+
+    textarea, button {
+      width: 100%;
+    }
+
+    input {
+      width: min(100%,420px);
+    }
+
+    .chainName {
+      margin-left: 5px;
+    }
+
+    textarea {
+      height: min(300px, 75vh);
+      max-height: 75vh;
+      font-size: 1.2em;
+    }
+
+    textarea, input {
+      background-color: #171D1C;
+      color: #ffffff;
+      border: 1px solid #9DA3FB;
+      padding: 5px;
+    }
+
+    textarea::placeholder, input[type=text]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #555555;
+      opacity: 1; /* Firefox */
+    }
+
+    textarea:-ms-input-placeholder, input[type=text]:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: #555555;
+    }
+
+    textarea::-ms-input-placeholder, input[type=text]::-ms-input-placeholder { /* Microsoft Edge */
+      color: #555555;
+    }
+
+    button {
+      background: linear-gradient(90.67deg, rgba(0, 0, 0, 0.4) -0.25%, rgba(0, 0, 0, 0) 100.37%), #2835F6;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      height: min(2em, 20vh);
+    }
+  }
+}

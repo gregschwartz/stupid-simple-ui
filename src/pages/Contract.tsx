@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FormEvent, useRef } from "react";
+import {Helmet} from "react-helmet";
 import { useParams } from "react-router-dom";
 import CoolLoading from '../components/coolLoading/CoolLoading';
 import { ethers } from "ethers";
@@ -10,8 +11,10 @@ import { Web3Button, useWeb3Modal } from "@web3modal/react";
 import Editable from "../components/coolEditable/CoolEditable";
 import { useWeb3ModalTheme } from "@web3modal/react";
 import { titleCaseSentence } from '../helpers/titleCase';
+import { SecurityCheck } from "../helpers/securityCheck";
 
-import './Contract.css';
+import { Col, Container, Row } from "react-bootstrap";
+import './Contract.scss';
 
 // function Field({ name: string, type: string, internalType: string }) {
 //   let options = {};
@@ -61,7 +64,7 @@ export enum ExecutionStatus {
 }
 
 export default function Contract() {
-  const { wagmiClient, chains } = useWagmi()
+  const { chains } = useWagmi()
   const { address, isConnected } = useAccount();
   const { setTheme } = useWeb3ModalTheme();
   const [styleTagForTheme, setStyleTagForTheme] = useState("");
@@ -138,27 +141,27 @@ export default function Contract() {
         setThemeColor(result[0].themeNameForWalletConnect);
       }
     }
-
+    
     if(!isEditing){
       loadContract();
     }    
-
   }, [chainName, contractAddress, record.name, getByFunc, isEditing]);
 
   
 
   //TODO: add support for an ID in the URL, and then use that one instead!
-  const abi = JSON.parse(record.contractAbi);
+  const abiFromDB = JSON.parse(record.contractAbi);
+  let abi = (abiFromDB['abi'] !== undefined ? abiFromDB.abi : abiFromDB);
 
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
-  let contract = new ethers.Contract(contractAddress, abi.abi, provider);
+  let contract = new ethers.Contract(contractAddress, abi, provider);
 
   const connectWallet = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    const walletAddress = await signer.getAddress();
+    // const walletAddress = await signer.getAddress();
     // console.log(`connectWallet address '${walletAddress}'`);
     return contract.connect(signer);
   };
@@ -170,8 +173,11 @@ export default function Contract() {
       var html;
 
       //check if it is a transaction in-progress hash instead of data
-      if(result.hash) {
-        html = `<img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> Awaiting confirmation, up to 5 min wait (see wallet for info)`;
+      if(result == null) {
+        setExecutionStatus(ExecutionStatus.ERROR);
+        html = `😭 Error, the contract didn't accept your request! Try different parameters or again later.`;
+      } else if(result.hash) {
+        html = `<img src="/ethereum_icon48.png" height={24} width={24} class="loadingEthereum" /> Awaiting confirmation, up to 5 min wait (see wallet for info)`;
         console.log("awaiting confirm");
 
         result.wait().then(() => {
@@ -222,26 +228,26 @@ export default function Contract() {
     let textColor = "white";
 
     //🤢 have to use this lunatic method because of the way WalletConnect coded it to only allow specific color values!
-    if(themeName == "blackWhite") {
+    if(themeName === "blackWhite") {
       setTheme({themeColor: "blackWhite"});
       backgroundColor = "white";
       textColor = "black";
-    } else if(themeName == "blue") {
+    } else if(themeName === "blue") {
       setTheme({themeColor: "blue"});
       backgroundColor = "rgb(81,109,251)";
-    } else if(themeName == "green") {
+    } else if(themeName === "green") {
       setTheme({themeColor: "green"});
       backgroundColor = "rgb(38,217,98)";
-    } else if(themeName == "magenta") {
+    } else if(themeName === "magenta") {
       setTheme({themeColor: "magenta"});
       backgroundColor = "rgb(203,77,140)";
-    } else if(themeName == "orange") {
+    } else if(themeName === "orange") {
       setTheme({themeColor: "orange"});
       backgroundColor = "rgb(255,166,76)";
-    } else if(themeName == "purple") {
+    } else if(themeName === "purple") {
       setTheme({themeColor: "purple"});
       backgroundColor = "rgb(144,110,247)";
-    } else if(themeName == "teal") {
+    } else if(themeName === "teal") {
       setTheme({themeColor: "teal"});
       backgroundColor = "rgb(54,226,226)";
     } else { //default
@@ -325,110 +331,132 @@ export default function Contract() {
 
   return (
     isLoading? <CoolLoading/> :
-    <div className="contractPage prettyBackground">
-      <h1 onClick={() => setEditing(true)}>
-        <Editable
-          text={record.name}
-          placeholder="My contract name"
-          childRef={inputRef}
-          type="input"
-          onChange={handleNameChange}
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            name="contractName"
-            placeholder="My contract name"
-            value={record.name}
-            onChange={handleNameChange}
-          />
-        </Editable>
-      </h1>
+    <Container className="contractPage">
+      <Row>
+        <Col xs={12}>
+          <style>
+            {styleTagForTheme}
+          </style>
+          <Helmet>
+            <meta charSet="utf-8" />
+            <title>{record.name}, powered by Stupid Simple UI -- Automagic UI and Hosting for Smart Contracts</title>
+            <meta name="description" content={`${record.name} is powered by StupidSimpleUI.com Provide your smart contract. We make and host a beautiful customizable UI that you can immediately share. No need to learn React, or even CSS!`} />
+          </Helmet>
 
-      <div className='formSection'>
-        {abi.abi.map((functionOrObject) => {
-          if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
-    
-          return (
-            <form onSubmit={handleSubmit} name={functionOrObject.name} key={functionOrObject.name}>
-              <h2>{functionOrObject.prettyName ?? titleCaseSentence(functionOrObject.name)}</h2>
+          <SecurityCheck chainName={chainName} contractAddress={contractAddress} uiCreatorAddress={record.ownerAddress} />
 
-              {(functionOrObject.stateMutability === "payable" ? (
-                <div className='addressSection row'>
-                  <div className='label'>
-                    <label htmlFor="contractAddres">Amount in Ether (not wei)</label> 
-                  </div>
-                  <div className='input'>
-                    <input type="number" id="amount" name="amount" className='amount' placeholder="Amount of Eth" required />
-                  </div>
-                </div>
-              ) : "")}
+          <h1 onClick={() => setEditing(true)}>
+            <Editable
+              text={record.name}
+              placeholder="My contract name"
+              childRef={inputRef}
+              type="input"
+              onChange={handleNameChange}
+            >
+              <input
+                ref={inputRef}
+                type="text"
+                name="contractName"
+                placeholder="My contract name"
+                value={record.name}
+                onChange={handleNameChange}
+              />
+            </Editable>
+          </h1>
+          <div className="addresses">
+            {/* Contract created by ???<br /> */}
+            UI created by {record.ownerAddress}
+          </div>
+        </Col>
+      </Row>
 
-              {functionOrObject.inputs.map((input) => {
-                let placeholder = input.type;
-                if(input.type == "address" || input.type == "address payable") {
-                  placeholder = "0xabc123...";
-                } else if(input.type == "string") {
-                  placeholder = "Letters";
-                }
+      <Row>
+        <Col xs={12} xl={{ span: 10, offset: 1 }} className="prettyBackground">
+          {abi.map((functionOrObject) => {
+            if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
+      
+            //sometimes they're missing, so put in empty set if needed
+            functionOrObject.inputs ||= [];
+            functionOrObject.outputs ||= [];
 
-                let name = input.prettyName ?? titleCaseSentence(input.name) ?? "Id";
+            return (
+              <form onSubmit={handleSubmit} name={functionOrObject.name} key={functionOrObject.name}>
+                <h2>{functionOrObject.prettyName ?? titleCaseSentence(functionOrObject.name)}</h2>
 
-                //remove the underscore, it's common practice to use in the context of setting a class variable
-                if(name[0] == "_") { name = name.substring(1); }
-                
-                return (
-                  <div className='row' key={name}>
+                {(functionOrObject.stateMutability === "payable" ? (
+                  <div className='addressSection row'>
                     <div className='label'>
-                      <label htmlFor={input.name}>{name}</label> 
+                      <label htmlFor="contractAddres">Amount in Ether (not wei)</label> 
                     </div>
                     <div className='input'>
-                      <input type="text" name={input.name} placeholder={placeholder} required />
-                    </div>   
+                      <input type="number" id="amount" name="amount" className='amount' placeholder="Amount of Eth" required />
+                    </div>
                   </div>
-                );
-              })}
+                ) : "")}
 
-              <div className='row submit'>
-                <div className='input'>
-                  {isConnected && <button type="submit" className='submit' disabled={executionStatus==ExecutionStatus.EXECUTING}>
-                    {executionStatus==ExecutionStatus.EXECUTING ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : "Run"}
-                    </button>}
-                  {!isConnected && <Web3Button />}
+                {functionOrObject.inputs.map((input) => {
+                  let placeholder = input.type;
+                  if(input.type === "address" || input.type === "address payable") {
+                    placeholder = "0xabc123...";
+                  } else if(input.type === "string") {
+                    placeholder = "Letters";
+                  }
+
+                  let name = input.prettyName ?? titleCaseSentence(input.name) ?? "Id";
+
+                  //remove the underscore, it's common practice to use in the context of setting a class variable
+                  if(name[0] === "_") { name = name.substring(1); }
+                  
+                  return (
+                    <div className='row' key={name}>
+                      <div className='label'>
+                        <label htmlFor={input.name}>{name}</label> 
+                      </div>
+                      <div className='input'>
+                        <input type="text" name={input.name} placeholder={placeholder} required />
+                      </div>   
+                    </div>
+                  );
+                })}
+
+                <div className='row submit'>
+                  <div className='input'>
+                    {isConnected && <button type="submit" className='submit' disabled={executionStatus===ExecutionStatus.EXECUTING}>
+                      {executionStatus===ExecutionStatus.EXECUTING ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" alt="Executing..." /> : "Run"}
+                      </button>}
+                    {!isConnected && <Web3Button />}
+                  </div>
                 </div>
-              </div>
-              
-              {functionOrObject.outputs.map((output) => {
-                return (
-                  <div className='row response' key={output.type}>
-                    <div className='label'>
-                      <></>
+                
+                {functionOrObject.outputs.map((output) => {
+                  return (
+                    <div className='row response' key={output.type}>
+                      <div className='label'>
+                        <></>
+                      </div>
+                      <div className='input responseCell'>
+                        {output.name ? output.name : "Returns"}: {output.type}
+                      </div>
                     </div>
-                    <div className='input responseCell'>
-                      {output.name ? output.name : "Returns"}: {output.type}
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
-              {functionOrObject.outputs.length === 0 &&
-                  <div className='row response'>
-                    <div className='label'>
-                      <></>
+                {functionOrObject.outputs.length === 0 &&
+                    <div className='row response'>
+                      <div className='label'>
+                        <></>
+                      </div>
+                      <div className='input responseCell'>
+                        Returns information
+                      </div>
                     </div>
-                    <div className='input responseCell'>
-                      Returns information
-                    </div>
-                  </div>
-              }
-            </form>
-          );
-        })}
+                }
+              </form>
+            );
+          })}
 
-      </div>
-      <style>
-        {styleTagForTheme}
-      </style>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
