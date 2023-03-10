@@ -70,7 +70,23 @@ export function parseResponseSecurityCheckToken(data, address) {
 }
 
 export function parseResponseSecurityCheckNFT(data) {
-  return [];  
+  if(!data || !data.result) { return []; }
+  
+  const result = data.result;
+  let issues = [];
+  // console.log(result);
+
+  //check for bad permissions by the owner
+  if(result.privileged_burn?.value==="1" || result.privileged_burn?.value==="3") { issues.push(`Contract Owner can burn other accounts' NFTs!`); }
+  if(result.transfer_without_approval?.value==="1" || result.transfer_without_approval?.value==="3") { issues.push(`Contract Owner can transfer other accounts' NFTs without permission!`); }
+  if(result.self_destruct?.value==="1" || result.self_destruct?.value==="3") { issues.push(`Contract can  self destruct, destroying all assets!`); }
+  
+  //other
+  if(result.restricted_approval==="1") { issues.push(`Contract restricts trading, cannot be traded on regular exchanges`); }
+  if(result.oversupply_minting==="1") { issues.push(`Contract Owner can mint more than the claimed supply, which will drive value down`); }
+
+  // console.log(issues);
+  return issues;
 }
 
 export function parseResponseSecurityCheckAddress(data, nameForAddressBeingChecked) {
@@ -106,7 +122,6 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
   "bsc": 56, "okc": 66, "gnosis": 100, "heco": 128, "polygon": 137, "fantom":250, "kcc": 321, "ethw": 10001, "arbitrum": 42161, "avalanche": 43114, "consensys zkevm": 59140, "fon": 201022, "harmony": 1666600000,};
   
   const [issues, setIssues] = useState([]);
-  const [contractCreatorAddress, setContractCreatorAddress] = useState("");
 
   useEffect(()=>{
 
@@ -115,6 +130,7 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
       if(thisChainId === undefined) { setIssues([]); return; }
 
       let found = [];
+      let contractCreatorAddress;
 
       //check contract
       const r1 = await fetch(`https://api.gopluslabs.io/api/v1/approval_security/${thisChainId}?contract_addresses=${contractAddress}`);
@@ -123,14 +139,14 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
       
       //address check on contract creator
       if(j1.result?.creator_address !== undefined) {
-        setContractCreatorAddress(j1.result.creator_address);
-        const r2 = await fetch(`https://api.gopluslabs.io/api/v1/address_security/${j1.result.creator_address}?chain_id=${thisChainId}`);
+        contractCreatorAddress = j1.result.creator_address;
+        const r2 = await fetch(`https://api.gopluslabs.io/api/v1/address_security/${contractCreatorAddress}?chain_id=${thisChainId}`);
         const j2 = await r2.json();
         found = found.concat(parseResponseSecurityCheckAddress(j2, "Contract Creator"));
       }
 
       //address check on UI creator address (if different)
-      if(uiCreatorAddress !== undefined && uiCreatorAddress !== j1.result?.creator_address) {
+      if(uiCreatorAddress !== undefined && uiCreatorAddress !== contractCreatorAddress) {
         const r3 = await fetch(`https://api.gopluslabs.io/api/v1/address_security/${uiCreatorAddress}?chain_id=${thisChainId}`)
         const j3 = await r3.json();
         found = found.concat(parseResponseSecurityCheckAddress(j3, "UI Creator"));
@@ -141,12 +157,11 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
       const j4 = await r4.json();
       found = found.concat(parseResponseSecurityCheckToken(j4));
 
-      // fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`)
-      // .then(response => response.json())
-      // .then((data) => {
-      //   const parsed = parseResponseSecurityCheckNFT(data);
-      //   setIssues(issues.concat(parsed));
-      // });
+      //check NFT
+      const r5 = await fetch(`https://api.gopluslabs.io/api/v1/nft_security/${thisChainId}?contract_addresses=${contractAddress}`);
+      const j5 = await r5.json();
+      console.log("nft", j5);
+      found = found.concat(parseResponseSecurityCheckNFT(j5));
 
       setIssues(found);
     }

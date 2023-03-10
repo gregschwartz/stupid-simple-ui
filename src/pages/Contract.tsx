@@ -375,6 +375,10 @@ export default function Contract() {
           {abi.map((functionOrObject) => {
             if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
       
+            //sometimes they're missing, so put in empty set if needed
+            functionOrObject.inputs ||= [];
+            functionOrObject.outputs ||= [];
+
             return (
               <form onSubmit={handleSubmit} name={functionOrObject.name} key={functionOrObject.name}>
                 <h2>{functionOrObject.prettyName ?? titleCaseSentence(functionOrObject.name)}</h2>

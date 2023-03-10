@@ -1,4 +1,4 @@
-import { securityCheck, parseResponseSecurityCheckApproval, parseResponseSecurityCheckToken, parseResponseSecurityCheckAddress } from './securityCheck';
+import { securityCheck, parseResponseSecurityCheckApproval, parseResponseSecurityCheckToken, parseResponseSecurityCheckAddress, parseResponseSecurityCheckNFT } from './securityCheck';
 
 // test('securityCheck', async () => {
 //   const nastyContract = "0xe5c26b21f34fbb63f759e82f3fd1a2ea575ed5d8";
@@ -111,3 +111,25 @@ test('parseResponseSecurityCheckToken', () => {
 
 });
 
+test('parseResponseSecurityCheckNFT', () => {
+  let data = {"code":2,"message":"partial data obtained","result":{"nft_address":"0x57a216567d596073dff4cc5026450619ee0be4a5","traded_volume_24h":0,"red_check_mark":null,"total_volume":0,"nft_proxy":1,"restricted_approval":null,"highest_price":0,"transfer_without_approval":{},"discord_url":null,"nft_open_source":1,"privileged_minting":{"value":null,"owner_address":null,"owner_type":null},"nft_owner_number":381,"trust_list":0,"token_id":null,"lowest_price_24h":0,"average_price_24h":0,"nft_erc":"erc721","creator_address":"0x4abf33dbec1e62ae8082fcd67062248e9f5fb515","medium_url":null,"privileged_burn":{"value":null,"owner_address":null,"owner_type":null},"malicious_nft_contract":0,"twitter_url":null,"nft_description":"[Mint on the website](https://dailys.top)\n\nNintendo Official is a collection of collectible Nintendo Entertainment System console game cartridges.You will enjoy online connection, cloud archives, member-exclusive games, member-limited bonuses, and member-exclusive privileges. Additional services such as member discounts will be added in the future, and there may also be member-limited themed gifts.","nft_symbol":"Nintendo","self_destruct":{"value":null,"owner_address":null,"owner_type":null},"metadata_frozen":null,"owner_address":"0x4abf33dbec1e62ae8082fcd67062248e9f5fb515","token_owner":null,"nft_verified":0,"same_nfts":[{"symbol":"Nintendo","createBlockHeight":14596256,"ownerCount":2533,"contractAddress":"0x572887624c096d0a1d84e3d7ecfe0cc55673b1d7","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14769194,"ownerCount":1499,"contractAddress":"0x3c28c9e1314b977de890dfd5a1a46d652d171ed9","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14624456,"ownerCount":1474,"contractAddress":"0x176ff191b9d4de11c9d5f979ea5a56f2ac027aaf","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14712533,"ownerCount":1264,"contractAddress":"0x54144a0ca4822414ec4e745e6ace543a322d94ee","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14737904,"ownerCount":1212,"contractAddress":"0xa1626168c67cb21ef5433f52a76e951feb1ebb30","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14570938,"ownerCount":892,"contractAddress":"0xdd0f35c245c141937ac6acc6aedc3eb157cbda51","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14731247,"ownerCount":883,"contractAddress":"0xfa3e2b753ba1cc8045e2aefe30667a1147717a78","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14657715,"ownerCount":865,"contractAddress":"0xeff9852106430fbe38defe2c1b0dc4436ec1dad3","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14609733,"ownerCount":623,"contractAddress":"0xa9295ad63ed907b29d70874f41b8dd3b5abc98fe","fullName":"Nintendo"},{"symbol":"Nintendo","createBlockHeight":14667635,"ownerCount":621,"contractAddress":"0xa81a6bbf12d3187e60640b0fe91df136b9935382","fullName":"Nintendo"}],"nft_items":811,"oversupply_minting":null,"nft_name":"Nintendo","github_url":null,"website_url":"https://dailys.top","telegram_url":null,"sales_24h":0,"create_block_number":14602651}};
+  expect(parseResponseSecurityCheckNFT(data)).toStrictEqual([]);
+  
+  data.result.restricted_approval="1";
+  data.result.transfer_without_approval={value: "1"};
+  data.result.self_destruct={value: "1"};
+  expect(parseResponseSecurityCheckNFT(data)).toStrictEqual([
+    "Contract Owner can transfer other accounts' NFTs without permission!",
+    "Contract can  self destruct, destroying all assets!",
+    "Contract restricts trading, cannot be traded on regular exchanges",
+  ]);
+
+  data.result.restricted_approval="0";
+  data.result.oversupply_minting="1";
+  data.result.privileged_burn={value: "1"};
+  data.result.transfer_without_approval={};
+  data.result.self_destruct={};
+  expect(parseResponseSecurityCheckNFT(data)).toStrictEqual([
+    "Contract Owner can burn other accounts' NFTs!",
+    "Contract Owner can mint more than the claimed supply, which will drive value down",  ]);
+});
