@@ -1,5 +1,4 @@
-"If you're building products in web3, you spend 20% of the time writing the smart contract, and 80% of the time doing the damn frontend!"
-- [Austin Griffith](https://youtu.be/Q9LC5bS0Ghw?t=372)
+"If you're building products in web3, you spend 20% of the time writing the smart contract, and 80% of the time doing the damn frontend!" -- [Austin Griffith](https://youtu.be/Q9LC5bS0Ghw?t=372)
 
 # Stupid Simple UI - Automagic UI for Smart Contracts
 
