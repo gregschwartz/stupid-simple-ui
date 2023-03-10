@@ -8,7 +8,7 @@ import {useEffect, useState} from 'react';
 // }
 
 
-export function parseResponseSecurityCheckAccount(data) {
+export function parseResponseSecurityCheckApproval(data) {
   if(!data || !data.result) { return []; }
   
   let results = [];
@@ -57,7 +57,7 @@ export function SecurityCheck({chainName, contractAddress}) {
       .then(response => response.json())
       .then((data) => {
         // console.log("data", data);
-        const parsed = parseResponseSecurityCheckAccount(data);
+        const parsed = parseResponseSecurityCheckApproval(data);
         // console.log("setIssues", parsed);
         setIssues(parsed); 
       });

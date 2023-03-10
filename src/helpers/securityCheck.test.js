@@ -1,4 +1,4 @@
-import { securityCheck, parseResponseSecurityCheckAccount } from './securityCheck';
+import { securityCheck, parseResponseSecurityCheckApproval } from './securityCheck';
 
 // test('securityCheck', async () => {
 //   const nastyContract = "0xe5c26b21f34fbb63f759e82f3fd1a2ea575ed5d8";
@@ -10,9 +10,9 @@ import { securityCheck, parseResponseSecurityCheckAccount } from './securityChec
 //   ]);
 // });
 
-test('parseResponseSecurityCheckAccount', () => {
+test('parseResponseSecurityCheckApproval', () => {
 
-  expect(parseResponseSecurityCheckAccount({
+  expect(parseResponseSecurityCheckApproval({
     "code": 1,
     "message": "ok",
     "result": {
@@ -31,7 +31,7 @@ test('parseResponseSecurityCheckAccount', () => {
     "Contract has implemented phishing activities",
   ]);
 
-  expect(parseResponseSecurityCheckAccount({
+  expect(parseResponseSecurityCheckApproval({
     "code": 1,
     "message": "ok",
     "result": {
@@ -49,7 +49,7 @@ test('parseResponseSecurityCheckAccount', () => {
     "Contract has implemented phishing activities",
   ]);
 
-  expect(parseResponseSecurityCheckAccount({
+  expect(parseResponseSecurityCheckApproval({
     "code": 1,
     "message": "ok",
     "result": {
