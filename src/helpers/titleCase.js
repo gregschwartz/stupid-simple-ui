@@ -28,9 +28,11 @@ export function titleCaseSentence(s) {
     }
   }
 
-  words = words.map(function(word) {
-    if(word.length === 0) {return "";}
-    return word[0].toUpperCase() + word.slice(1);
+  words = words.filter(function(word) {
+    return (word.length !== 0);
+  })
+  .map(function(word) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
   });
 
   return words.join(" ");
