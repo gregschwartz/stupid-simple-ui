@@ -40,15 +40,15 @@ body, .App header h1 a {
   margin-right: auto;
   margin-bottom: 15px;
   font-size: 1em;
+  
+  a {
+    color: #2835F6;
+  }
 }
 
 .App header .walletButton {
   margin-left: 20px;
   margin-bottom: 4px;
-}
-
-.App header .examples a {
-  color: #2835F6;
 }
 
 .App {

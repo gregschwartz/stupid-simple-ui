@@ -147,32 +147,63 @@ contract Escrow {
   return (
     isRedirecting ? <CoolRedirect /> :
     <>
+    <style>
+      @media screen and (max-width: 992px) {"{"}
+        header {"{"}display: none !important{"}"}
+        .descriptionHeader {"{"}margin-top: 30px !important{"}"}
+        .logoWrapper {"{"}text-align: center !important;{"}"}
+        .descriptionHeader h2 {"{"}text-align: center !important{"}"}
+        .descriptionHeader p {"{"}display: none !important{"}"}
+        .prettyBackground {"{"}border-radius: 60px !important{"}"}
+        footer {"{"}margin-left:15% !important; margin-right: 15% !important;{"}"}
+      {"}"}
+    </style>
     <Container>
       <Row className='descriptionHeader'>
-        <Col xs={12} sm={3} md={4} className='logo'>
-          <img src="/logo.png" alt="Stupid Simple UI logo" />
+        <Col className="logoWrapper" xs={12} sm={3} md={4}>
+          <div className='d-none d-sm-inline logo'>
+            <img src="/logo.png" alt="Stupid Simple UI logo" />
+          </div>
+          <div className='d-inline d-sm-none logoHorizontal'>
+            <img src="/logo horizontal.png" alt="Stupid Simple UI logo" />
+          </div>
         </Col>
-        <Col xs={12} sm={9} md={true} lg={true} className='content'>
+        <Col xs={{span:10, offset:1}} sm={{span:9, offset: 0}} md={true} lg={true} className='content'>
           <h2>Automagic UI & Hosting for Smart Contracts</h2>
-          <p>
-            Provide your smart contract.<br />
-            We make and host a beautiful customizable UI that you can immediately share.<br />
-            No need to learn React, or even CSS!<br />
-            <strong style={{"color": "rgb(203,77,140)"}}>Free until June 30, thanks to EthDenver!</strong>
-          </p>
+          <p>Provide your smart contract.</p>
+          <p>We make and host a beautiful customizable UI that you can immediately share.</p>
+          <p>No need to learn React, or even CSS!</p>
+          <p><strong style={{"color": "rgb(203,77,140)"}}>Free until June 30, thanks to EthDenver!</strong></p>
         </Col>
       </Row>
-      <Row className='descriptionBullets'>
-        <Col className='num1'>
-        1. Input Contract Details
-        </Col>
-        <Col className='num2'>
-          2. Connect Wallet
-        </Col>
-        <Col className='num3'>
-          3. Share your new UI!
-        </Col>
-      </Row>
+      <div className='d-none d-sm-flex'>
+        <Row className='descriptionBoxes'>
+          <Col className='num1'>
+          1. Input Contract Details
+          </Col>
+          <Col className='num2'>
+            2. Connect Wallet
+          </Col>
+          <Col className='num3'>
+            3. Share your new UI!
+          </Col>
+        </Row>
+      </div>
+      <div className='d-block d-sm-none descriptionBullets'>
+        <Row>
+          <Col className='img' xs={{span:2, offset: 3}}><img src='/icon1.png' /></Col>
+          <Col className='text'>Input Contract Details</Col>
+        </Row>
+        <Row>
+          <Col className='img' xs={{span:2, offset: 3}}><img src='/icon2.png' /></Col>
+          <Col className='text'>Connect Wallet</Col>
+        </Row>
+        <Row>
+          <Col className='img' xs={{span:2, offset: 3}}><img src='/icon3.png' /></Col>
+          <Col className='text'>Share your new UI!</Col>
+        </Row>
+      </div>
+
     
       <Row>
       <Col className='newFormWrapper prettyBackground' xs={12}>

@@ -34,12 +34,12 @@ function App() {
     <WagmiConfig client={wagmiClient}>
     <div className="App">
       <header className='appHeader'>
-        <div id="colorSquare" />
+        <div id="colorSquare" className='d-none d-sm-flex' />
         <h1>
           <a href="/">Stupid Simple UI</a>
         </h1>
         <div className='examples'>
-          <a href="/examples">Example UIs</a>
+          <a href="/examples">Examples</a>
         </div>
         <div className='walletButton'>
           <Web3Button />
