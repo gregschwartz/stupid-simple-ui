@@ -22,7 +22,7 @@ function Examples() {
       <div>
         <h3>Ethereum</h3>
         <ul>
-          <li><a href="/contracts/Goerli/0xDB0d5dB07d42D5589230e40c3A51Ac8454D312d3">coming soon</a></li>
+          <li><a href="/contracts/Ethereum/0xE5C26b21F34fbb63f759E82f3fD1A2ea575Ed5D8">Contract with security issues (honeypot)</a></li>
         </ul>
       </div>
     </div>
