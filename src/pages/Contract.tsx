@@ -150,11 +150,12 @@ export default function Contract() {
   
 
   //TODO: add support for an ID in the URL, and then use that one instead!
-  const abi = JSON.parse(record.contractAbi);
+  const abiFromDB = JSON.parse(record.contractAbi);
+  let abi = (abiFromDB['abi'] !== undefined ? abiFromDB.abi : abiFromDB);
 
   //connect to contract
   let provider = ethers.getDefaultProvider(process.env.REACT_APP_ALCHEMY_URL, {"alchemy": process.env.REACT_APP_ALCHEMY_API_KEY});
-  let contract = new ethers.Contract(contractAddress, abi.abi, provider);
+  let contract = new ethers.Contract(contractAddress, abi, provider);
 
   const connectWallet = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
@@ -367,7 +368,7 @@ export default function Contract() {
 
       <Row>
         <Col xs={12} xl={{ span: 10, offset: 1 }} className="prettyBackground">
-          {abi.abi.map((functionOrObject) => {
+          {abi.map((functionOrObject) => {
             if (!functionOrObject.name || functionOrObject.type==="event") { return ""; }
       
             return (

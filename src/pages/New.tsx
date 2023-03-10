@@ -65,16 +65,16 @@ export default function Home() {
       return;
     }
 
-    let abiAsJson = {};
+    let abiAsJson;
     try {
       abiAsJson = JSON.parse(abiAsString);
     } catch (exception) {
       console.log("Exception converting ABI to JSON", exception);
       //below check will catch that the ABI is empty, so just drop through
     }
-
-    if(abiAsJson["abi"] === undefined || abiAsJson["abi"]?.length === 0) {
-      showError("ABI is not valid, please make sure you're copy and pasting it correctly. Particularly make sure it includes the subsection `abi` array.");
+  
+    if(abiAsJson === undefined || (abiAsJson['length'] !== undefined && abiAsJson?.length === 0) || (abiAsJson["abi"] !== undefined && abiAsJson["abi"]?.length === 0)) {
+      showError("ABI is not valid, please make sure you're copy and pasting it correctly. It must at least be an array of hashes representing each function and attribute.");
       return;
     }
 
@@ -82,8 +82,10 @@ export default function Home() {
     const contractName = (abiAsJson["contractName"]?.length > 0 ? titleCaseSentence(abiAsJson["contractName"]) : contractAddress);
 
     //remove the big chunks of data from the JSON, so it doesn't hit Convex's storage limit
-    abiAsJson["bytecode"] = "removed";
-    abiAsJson["deployedBytecode"] = "removed";
+    if(abiAsJson["bytecode"] !== undefined) {
+      abiAsJson["bytecode"] = "removed";
+      abiAsJson["deployedBytecode"] = "removed";
+    }
 
     setIsWritingToDb(true);
     const failureTimer = setTimeout(() => {
