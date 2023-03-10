@@ -34,6 +34,9 @@ export default function CoolRedirect() {
         </div>
       </div>
     </div>
+    <style>
+      footer .licenses {"{"}display: none;{"}"}
+    </style>
     <div className='CoolRedirectContainer'>
       <div className="checkListContainer" ref={divRef}>
         <div className="checkListItem">

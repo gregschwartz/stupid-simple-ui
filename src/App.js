@@ -67,7 +67,9 @@ function App() {
     </div>
   </WagmiConfig>
   <footer>
-    <a href="https://www.iconfinder.com/icons/4691461/ethereum_icon">Ethereum icon</a> by <a href='https://www.iconfinder.com/iconfinder'>Iconfinder</a> (with no changes) under <a href='https://creativecommons.org/licenses/by/3.0/'>Creative Commons (Attribution 3.0 Unported)</a> license
+    <div className='licenses'>
+      <a href="https://www.iconfinder.com/icons/4691461/ethereum_icon">Ethereum icon</a> by <a href='https://www.iconfinder.com/iconfinder'>Iconfinder</a> (with no changes) under <a href='https://creativecommons.org/licenses/by/3.0/'>Creative Commons (Attribution 3.0 Unported)</a> license
+    </div>
   </footer>
   </>
   );
