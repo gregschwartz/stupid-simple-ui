@@ -69,10 +69,42 @@ export function parseResponseSecurityCheckToken(data, address) {
   return results;
 }
 
-export function SecurityCheck({chainName, contractAddress}) {
-  //config
-  const chainIds = {"ethereum": 1, "bsc": 56, "okc": 66, "heco": 128, "polygon": 137, "fantom":250, "arbitrum": 42161, "avalanche": 43114};
+export function parseResponseSecurityCheckNFT(data) {
+  return [];  
+}
 
+export function parseResponseSecurityCheckAddress(data, nameForAddressBeingChecked) {
+  if(!data || !data.result) { return []; }
+  
+  const result = data.result;
+  let issues = [];
+  // console.log(result);
+  
+  //high risk issues
+  if(result.honeypot_related_address==="1") { issues.push(`${nameForAddressBeingChecked} has created tokens that were scams and/or honeypots`); }
+  if(result.phishing_activities==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in phishing activity`); }
+  if(result.blackmail_activities==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in blackmail activity`); }
+  if(result.stealing_attack==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in stealing attacks`); }
+  if(result.fake_kyc==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in fake identity verification (aka KYC)`); }
+  if(result.malicious_mining_activities==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in malicious mining`); }
+  if(result.cybercrime==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in cybercrime`); }
+  if(result.money_laundering==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in money laundering`); }
+  if(result.financial_crime==="1") { issues.push(`${nameForAddressBeingChecked} has been involved in financial crime`); }
+  if(result.blacklist_doubt==="1") { issues.push(`${nameForAddressBeingChecked} is suspected of malicious behavior`); }
+  if(result.sanctioned==="1") { issues.push(`${nameForAddressBeingChecked} has been sanctioned for bad behavior`); }
+
+  //number of contracts
+  if(result.number_of_malicious_contracts_created!==undefined && result.number_of_malicious_contracts_created!=="0") { issues.push(`${nameForAddressBeingChecked} has created ${result.number_of_malicious_contracts_created} malicious contract${(result.number_of_malicious_contracts_created==="1" ? "" : "s")}`); }
+
+  // console.log(issues);
+  return issues;
+}
+
+export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=undefined, contractCreatorAddress=undefined}) {
+  //config
+  const chainIds = {"ethereum": 1, "optimism": 10, "cronos": 25,
+  "bsc": 56, "okc": 66, "gnosis": 100, "heco": 128, "polygon": 137, "fantom":250, "kcc": 321, "ethw": 10001, "arbitrum": 42161, "avalanche": 43114, "consensys zkevm": 59140, "fon": 201022, "harmony": 1666600000,};
+  
   const [issues, setIssues] = useState([]);
 
   useEffect(()=>{
@@ -92,6 +124,31 @@ export function SecurityCheck({chainName, contractAddress}) {
         const parsed = parseResponseSecurityCheckToken(data);
         setIssues(issues.concat(parsed));
       });
+
+      // fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`)
+      // .then(response => response.json())
+      // .then((data) => {
+      //   const parsed = parseResponseSecurityCheckNFT(data);
+      //   setIssues(issues.concat(parsed));
+      // });
+
+      if(contractCreatorAddress !== undefined) {
+        fetch(`https://api.gopluslabs.io/api/v1/address_security/${contractCreatorAddress}?chain_id=${thisChainId}`)
+        .then(response => response.json())
+        .then((data) => {
+          const parsed = parseResponseSecurityCheckAddress(data);
+          setIssues(issues.concat(parsed));
+        });
+      }
+      
+      if(uiCreatorAddress !== undefined && contractCreatorAddress !== uiCreatorAddress) {
+        fetch(`https://api.gopluslabs.io/api/v1/address_security/${uiCreatorAddress}?chain_id=${thisChainId}`)
+        .then(response => response.json())
+        .then((data) => {
+          const parsed = parseResponseSecurityCheckAddress(data, "UI Creator");
+          setIssues(issues.concat(parsed));
+        });
+      }
 
    }, [chainName, contractAddress]);
   

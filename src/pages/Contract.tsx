@@ -343,7 +343,7 @@ export default function Contract() {
             <meta name="description" content={`${record.name} is powered by StupidSimpleUI.com Provide your smart contract. We make and host a beautiful customizable UI that you can immediately share. No need to learn React, or even CSS!`} />
           </Helmet>
 
-          <SecurityCheck chainName={chainName} contractAddress={contractAddress} />
+          <SecurityCheck chainName={chainName} contractAddress={contractAddress} uiCreatorAddress={record.ownerAddress} />
 
           <h1 onClick={() => setEditing(true)}>
             <Editable
@@ -363,6 +363,10 @@ export default function Contract() {
               />
             </Editable>
           </h1>
+          <div className="addresses">
+            {/* Contract created by ???<br /> */}
+            UI created by {record.ownerAddress}
+          </div>
         </Col>
       </Row>
 
