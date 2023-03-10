@@ -100,30 +100,46 @@ export function parseResponseSecurityCheckAddress(data, nameForAddressBeingCheck
   return issues;
 }
 
-export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=undefined, contractCreatorAddress=undefined}) {
+export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=undefined}) {
   //config
   const chainIds = {"ethereum": 1, "optimism": 10, "cronos": 25,
   "bsc": 56, "okc": 66, "gnosis": 100, "heco": 128, "polygon": 137, "fantom":250, "kcc": 321, "ethw": 10001, "arbitrum": 42161, "avalanche": 43114, "consensys zkevm": 59140, "fon": 201022, "harmony": 1666600000,};
   
   const [issues, setIssues] = useState([]);
+  const [contractCreatorAddress, setContractCreatorAddress] = useState("");
 
   useEffect(()=>{
-    const thisChainId = chainIds[chainName.toString().toLowerCase()];
-    if(thisChainId === undefined) { setIssues([]); return; }
 
-    fetch(`https://api.gopluslabs.io/api/v1/approval_security/${thisChainId}?contract_addresses=${contractAddress}`)
-      .then(response => response.json())
-      .then((data) => {
-        const parsed = parseResponseSecurityCheckApproval(data);
-        setIssues(issues.concat(parsed));
-      });
+    async function fetchGoPlusSecurityData() {
+      const thisChainId = chainIds[chainName.toString().toLowerCase()];
+      if(thisChainId === undefined) { setIssues([]); return; }
 
-      fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`)
-      .then(response => response.json())
-      .then((data) => {
-        const parsed = parseResponseSecurityCheckToken(data);
-        setIssues(issues.concat(parsed));
-      });
+      let found = [];
+
+      //check contract
+      const r1 = await fetch(`https://api.gopluslabs.io/api/v1/approval_security/${thisChainId}?contract_addresses=${contractAddress}`);
+      const j1 = await r1.json();
+      found = found.concat(parseResponseSecurityCheckApproval(j1));
+      
+      //address check on contract creator
+      if(j1.result?.creator_address !== undefined) {
+        setContractCreatorAddress(j1.result.creator_address);
+        const r2 = await fetch(`https://api.gopluslabs.io/api/v1/address_security/${j1.result.creator_address}?chain_id=${thisChainId}`);
+        const j2 = await r2.json();
+        found = found.concat(parseResponseSecurityCheckAddress(j2, "Contract Creator"));
+      }
+
+      //address check on UI creator address (if different)
+      if(uiCreatorAddress !== undefined && uiCreatorAddress !== j1.result?.creator_address) {
+        const r3 = await fetch(`https://api.gopluslabs.io/api/v1/address_security/${uiCreatorAddress}?chain_id=${thisChainId}`)
+        const j3 = await r3.json();
+        found = found.concat(parseResponseSecurityCheckAddress(j3, "UI Creator"));
+      }
+
+      //check token security issues
+      const r4 = await fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`);
+      const j4 = await r4.json();
+      found = found.concat(parseResponseSecurityCheckToken(j4));
 
       // fetch(`https://api.gopluslabs.io/api/v1/token_security/${thisChainId}?contract_addresses=${contractAddress}`)
       // .then(response => response.json())
@@ -132,23 +148,9 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
       //   setIssues(issues.concat(parsed));
       // });
 
-      if(contractCreatorAddress !== undefined) {
-        fetch(`https://api.gopluslabs.io/api/v1/address_security/${contractCreatorAddress}?chain_id=${thisChainId}`)
-        .then(response => response.json())
-        .then((data) => {
-          const parsed = parseResponseSecurityCheckAddress(data);
-          setIssues(issues.concat(parsed));
-        });
-      }
-      
-      if(uiCreatorAddress !== undefined && contractCreatorAddress !== uiCreatorAddress) {
-        fetch(`https://api.gopluslabs.io/api/v1/address_security/${uiCreatorAddress}?chain_id=${thisChainId}`)
-        .then(response => response.json())
-        .then((data) => {
-          const parsed = parseResponseSecurityCheckAddress(data, "UI Creator");
-          setIssues(issues.concat(parsed));
-        });
-      }
+      setIssues(found);
+    }
+    fetchGoPlusSecurityData();
 
    }, [chainName, contractAddress]);
   
@@ -172,4 +174,3 @@ export function SecurityCheck({chainName, contractAddress, uiCreatorAddress=unde
     </div>
    );
 }
-
