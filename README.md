@@ -1,3 +1,6 @@
+"If you're building products in web3, you spend 20% of the time writing the smart contract, and 80% of the time doing the damn frontend!"
+- [Austin Griffith](https://youtu.be/Q9LC5bS0Ghw?t=372)
+
 # Stupid Simple UI - Automagic UI for Smart Contracts
 
 At ETHDenver the most requested teammate was Front End Developer. In general, most smart contract developers don't know front-end development, and they shouldn't have to. 
