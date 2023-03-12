@@ -1,4 +1,5 @@
 import { mutation, query } from './_generated/server';
+import { Id } from "./_generated/dataModel";
 
 /*
   declare it
@@ -9,7 +10,7 @@ import { mutation, query } from './_generated/server';
   should return an array of all themes
 */
 export const getAll = query(async ({ db }) => {
-  return await db.query('themes').collect();
+  return await db.query('themes');
 });
 
 /*
@@ -20,7 +21,19 @@ export const getAll = query(async ({ db }) => {
     const response = await getFunction(id);
 */
 export const get = query(async ({ db }, themeId) => {
-  return await db.get(themeId);
+  try {
+    const id = new Id("themes", themeId);
+    return await db.get(id);
+  } catch(x) {
+    //catch unknown ID error
+    const badId = /Invalid argument `id` for `db.get`/;
+    if(badId.test(x)) {
+      return null;
+    }
+
+    //unknown error, throw it
+    throw x;
+  }
 });
 
 /*

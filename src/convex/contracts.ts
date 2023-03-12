@@ -36,8 +36,18 @@ export const add = mutation(async ({ db }, name, chainName, ownerAddress, contra
     const response = await getFunction(id);
 */
 export const get = query(async ({ db }, contractId) => {
-  const id = new Id("contracts", contractId);
-  return await db.get(id);
+  try {
+    const id = new Id("contracts", contractId);
+    return await db.get(id);
+  } catch(x) {
+    const badId = /Invalid argument `id` for `db.get`/;
+    if(badId.test(x)) {
+      return null;
+    }
+    
+    //unknown error, throw it
+    throw x;
+  }
 });
 
 //no longer needed but keep it around
