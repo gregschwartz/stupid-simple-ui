@@ -9,6 +9,7 @@ import Contract from "./pages/Contract";
 import New from "./pages/New";
 import ThemeEditor from './pages/theme/ThemeEditor';
 import Examples from './pages/Examples';
+import Admin from './pages/Admin';
 
 //WalletConnect and Wagmi
 import { Web3Modal } from '@web3modal/react';
@@ -39,7 +40,10 @@ function App() {
           <a href="/">Stupid Simple UI</a>
         </h1>
         <div className='examples'>
-          <a href="/examples">Examples</a>
+          {process.env.NODE_ENV==="development" 
+          ? <a href="/admin">All Contracts</a>
+          : <a href="/examples">Examples</a>
+          }
         </div>
         <div className='walletButton'>
           <Web3Button />
@@ -58,6 +62,7 @@ function App() {
                 <Route path='contracts/:contractId' element={<Contract />} />
                 <Route path='c/:contractId' element={<Contract />} />
                 <Route path='examples' element={<Examples />} />
+                <Route path='admin' element={<Admin />} />
                 <Route path='themes' element={<ThemeEditor />} />
                 <Route path='themes/:themeId' element={<ThemeEditor />} />
                 <Route path='themes/new' element={<ThemeEditor />} />

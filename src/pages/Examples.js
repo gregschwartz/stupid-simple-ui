@@ -1,7 +1,7 @@
 import './Examples.scss'
 
-function Examples() {
-  
+export default function Examples() {
+
   return (
     <div className="exampleList prettyBackground">
       <h2>Examples of UIs so you can see how this works</h2>
@@ -29,5 +29,3 @@ function Examples() {
     </div>
   );
 }
-
-export default Examples;
