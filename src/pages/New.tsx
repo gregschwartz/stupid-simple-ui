@@ -1,11 +1,10 @@
 'use client';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormEvent } from 'react'
 import { useMutation } from '../convex/_generated/react';
 import { Web3Button } from "@web3modal/react";
 import { useAccount, useEnsName, useNetwork } from 'wagmi';
 import CoolRedirect from '../components/coolRedirect/CoolRedirect';
-import { useWagmi } from '../hooks/useWagmi';
 import { titleCaseSentence } from '../helpers/titleCase';
 
 import './New.scss';
@@ -13,8 +12,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 export default function Home() {
 
-  const { wagmiClient, ethereumClient /*, chains */ } = useWagmi()
-  console.log({ wagmiClient, ethereumClient })
   //wrap the db function
   const addFunction = useMutation("contracts:add");
 
