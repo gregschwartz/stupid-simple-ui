@@ -108,15 +108,13 @@ export default function Contract() {
   useEffect(() => {
 
     const loadContract = async() => {
-
-      let result = await getFunc  as Contract;
-      console.log("result: ", result);
+      let result = await getFunc as Contract;
 
       if(result === undefined) {
+        setLoadingStatus(LoadingStatus.LOADING);
         return;
       } else if(result === null) {
         setLoadingStatus(LoadingStatus.NOT_FOUND);
-        console.log("null! result: ", result);
         return;
       }
 
@@ -126,7 +124,7 @@ export default function Contract() {
 
       //automatically ask to switch to the relevant chain
       chains.forEach((c) => {
-        if(c.network.toLowerCase() === chainName.toLowerCase()) {
+        if(c.network.toLowerCase() === result.chainName.toLowerCase()) {
           setDefaultChain(c);
         }
       });
