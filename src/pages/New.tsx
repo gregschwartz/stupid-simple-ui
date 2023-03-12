@@ -108,10 +108,10 @@ export default function Home() {
     if(response !== undefined && response.id && response.tableName) {
       clearTimeout(failureTimer);
 
-      //TODO: send to a sexy "building UI" screen instead
+      //send to pretty "building UI" screen instead
       setIRedirecting(true);
       await wait(10000);
-      window.location.pathname=`/contracts/${blockchainName}/${contractAddress}`;
+      window.location.pathname=`/contracts/${response.id}`;
       setIsWritingToDb(false);
     }
   }
@@ -243,7 +243,7 @@ contract Escrow {
             <div className='input'>
               {isConnected ? (
                 <button id="submitButton" type="submit" className='submit' disabled={isWritingToDb}>
-                  {isWritingToDb ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : "Host My Contract"}
+                  {isWritingToDb ? <img src="/ethereum_icon48.png" height={24} width={24} className="loadingEthereum" /> : `Host My ${chain ? `${chain.name}` : ""} Contract`}
                 </button>
                 ) : (
                 <Web3Button />

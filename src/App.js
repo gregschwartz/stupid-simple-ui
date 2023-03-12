@@ -55,7 +55,8 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path='/' element={<New />} />
-                <Route path='contracts/:chainName/:contractAddress' element={<Contract />} />
+                <Route path='contracts/:contractId' element={<Contract />} />
+                <Route path='c/:contractId' element={<Contract />} />
                 <Route path='examples' element={<Examples />} />
                 <Route path='themes' element={<ThemeEditor />} />
                 <Route path='themes/:themeId' element={<ThemeEditor />} />

@@ -55,6 +55,13 @@ interface Contract  {
   numViews: number;
 }
 
+export enum LoadingStatus {
+  LOADING = "Loading",
+  SUCCESS = "Loaded record",
+  NOT_FOUND = "Record not found",
+  ERROR = "error",
+}
+
 export enum ExecutionStatus {
   START = "START",
   EXECUTING = "executing",
@@ -66,14 +73,18 @@ export enum ExecutionStatus {
 export default function Contract() {
   const { chains } = useWagmi()
   const { address, isConnected } = useAccount();
+  const { setDefaultChain } = useWeb3Modal();
   const { setTheme } = useWeb3ModalTheme();
   const [styleTagForTheme, setStyleTagForTheme] = useState("");
 
-  const { chainName, contractAddress } = useParams();
+  const { contractId } = useParams();
   
+  const [chainName, setChainName] = useState("");
+  const [contractAddress, setContractAddress] = useState("");
+
   const [isEditing, setEditing] = useState(false);
-  const [isLoading, setIsloading] = useState(true);
-  const [executionStatus, setExecutionStatus] = React.useState<ExecutionStatus>(ExecutionStatus.START);
+  const [loadingStatus, setLoadingStatus] = useState<LoadingStatus>(LoadingStatus.LOADING);
+  const [executionStatus, setExecutionStatus] = useState<ExecutionStatus>(ExecutionStatus.START);
 
   let oContract: Contract = {
     _id: new Id("contracts", ""),
@@ -91,50 +102,36 @@ export default function Contract() {
 
   const [record, setRecord] = useState(oContract);
   const inputRef = useRef();
-
-  //automatically ask to switch to the relevant chain
-  const { setDefaultChain } = useWeb3Modal();
-  chains.forEach((c) => {
-    if(c.network.toLowerCase() === chainName.toLowerCase()) {
-      setDefaultChain(c);
-    }
-  });
-  
-  let getByFunc = useQuery("contracts:getBy", chainName, contractAddress);
  
+  const getFunc = useQuery("contracts:get", contractId);
+
   useEffect(() => {
 
     const loadContract = async() => {
 
-      let result = await getByFunc;
+      let result = await getFunc  as Contract;
+      console.log("result: ", result);
 
-      if(!result) {
-        return (
-          <div className="loadingWrapper">
-          <span>Loading...</span>  
-            <CoolLoading />
-          </div>
-        );
-      };
-
-      if(result.length === 0) {
-        return (
-          <div>
-            <h1>Error, contract not found</h1>
-            <h3>
-              Sorry, no one has made a UI for that contract. If you're the developer,{" "}
-              <a href={`/?chain=${chainName}&contractAddress=${contractAddress}`}>go create it!</a>
-            </h3>
-            <h6>
-              Chain: {chainName}<br />
-              Address: {contractAddress}
-            </h6>
-          </div>
-        );
+      if(result === undefined) {
+        return;
+      } else if(result === null) {
+        setLoadingStatus(LoadingStatus.NOT_FOUND);
+        console.log("null! result: ", result);
+        return;
       }
 
-      setRecord(result[0]);
-      setIsloading(false);
+      setRecord(result);
+      setChainName(result.chainName);
+      setContractAddress(result.contractAddress);
+
+      //automatically ask to switch to the relevant chain
+      chains.forEach((c) => {
+        if(c.network.toLowerCase() === chainName.toLowerCase()) {
+          setDefaultChain(c);
+        }
+      });
+
+      setLoadingStatus(LoadingStatus.SUCCESS);
 
       //set color in WalletConnect and other themes
       if(result[0].themeNameForWalletConnect?.length > 0) {
@@ -144,8 +141,8 @@ export default function Contract() {
     
     if(!isEditing){
       loadContract();
-    }    
-  }, [chainName, contractAddress, record.name, getByFunc, isEditing]);
+    }   
+  }, [record.name, getFunc, isEditing]);
 
   
 
@@ -329,8 +326,20 @@ export default function Contract() {
     setExecutionStatus(ExecutionStatus.AWAITING_CONFIRMATION);
   }
 
+  if(loadingStatus === LoadingStatus.LOADING) {
+    return (<CoolLoading/>);
+  } else if (loadingStatus === LoadingStatus.NOT_FOUND) {
+    return (
+      <div>
+        <h1>Contract not found</h1>
+        <h3>
+          Sorry, no one has made a UI for that contract. If you're the developer, <a href="/">go create it!</a>
+        </h3>
+      </div>
+    );
+  }
+
   return (
-    isLoading? <CoolLoading/> :
     <Container className="contractPage">
       <Row>
         <Col xs={12}>

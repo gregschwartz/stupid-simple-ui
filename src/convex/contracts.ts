@@ -1,3 +1,4 @@
+import { Id } from './_generated/dataModel';
 import { mutation, query } from './_generated/server';
 
 //declare it
@@ -27,6 +28,19 @@ export const add = mutation(async ({ db }, name, chainName, ownerAddress, contra
   });
 });
 
+/*
+  declare it
+    const getFunction = useQuery("themes:get");
+
+  use it later
+    const response = await getFunction(id);
+*/
+export const get = query(async ({ db }, contractId) => {
+  const id = new Id("contracts", contractId);
+  return await db.get(id);
+});
+
+//no longer needed but keep it around
 export const getBy = query(async ({ db }, chainName: string, contractAddress: string) => {
   return await db
   .query("contracts")
@@ -37,7 +51,7 @@ export const getBy = query(async ({ db }, chainName: string, contractAddress: st
   )
   .order("desc")
   .collect();
-}); 
+});
 
 // export const incrementNumViews = mutation(async ({ db }, documentId) => {
 //   const record = await db.get(documentId);
