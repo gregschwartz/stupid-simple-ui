@@ -23,7 +23,7 @@ export default function Examples() {
         <h3>Ethereum</h3>
         <ul>
           <li><a href="/contracts/Jy7p21Xy_fKkrz9rZAtL4g">Contract with security issues (100% taxes, can prevent transfers)</a></li>
-          <li><a href="/contracts/KLHNuGS5NtryxUjLZL4g">Contract with security issues (honeypot)</a></li>
+          <li><a href="/contracts/r-KLHNuGS5NtryxUjLZL4g">Contract with security issues (honeypot)</a></li>
         </ul>
       </div>
     </div>
