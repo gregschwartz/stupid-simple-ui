@@ -201,6 +201,11 @@ contract Escrow {
         </Row>
       </div>
 
+      <Row>
+        <Col className='quote' xs={12} md={{span: 8, offset: 2}} xl={{span: 6, offset: 3}}>
+          "In web3 you spend 20% of the time writing the smart contract, and 80% of the time doing the damn frontend!" <a href="https://youtu.be/Q9LC5bS0Ghw?t=372">Austin Griffith</a>
+        </Col>
+      </Row>
     
       <Row>
       <Col className='newFormWrapper prettyBackground' xs={12}>

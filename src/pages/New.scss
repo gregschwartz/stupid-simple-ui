@@ -75,6 +75,15 @@ body, .newFormWrapper textarea, .newFormWrapper input[type=text] {
   }
 }
 
+.quote {
+  font-size: 1.3em;
+  margin-bottom: 50px;
+  
+  a {
+    font-size: 0.8em;
+  }
+}
+
 .newFormWrapper, .newFormWrapper button, .newFormWrapper textarea, .newFormWrapper input {
   border-radius: 10px;
 }
