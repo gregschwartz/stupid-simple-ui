@@ -54,7 +54,7 @@ export default function Home() {
     const form = event.target as HTMLFormElement;
     const abiAsString = form.contractAbi.value as string;
     const contractAddress = form.contractAddress.value as string;
-    const contractCode = form.contractCode.value as string;
+    const contractCode = "";//form.contractCode.value as string;
 
     if(!abiAsString || !contractAddress){
       //show error
@@ -217,14 +217,14 @@ contract Escrow {
               </span>
             </div>
           </div>
-          <div className='codeSection row'>
+          {/* <div className='codeSection row'>
             <div className='label'>
               <label htmlFor="contractCode">Contract Code</label>
             </div>
             <div className='input'>
               <textarea name="contractCode" id="contractCode" className='contractCode' rows={20} required placeholder={placeholderContractCode} spellCheck='false' autoCapitalize='false' autoCorrect='false' />
             </div>
-          </div>
+          </div> */}
           <div className='codeSection row'>
             <div className='label'>
               <label htmlFor="contractAbi">Contract ABI</label>
