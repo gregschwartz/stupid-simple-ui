@@ -206,7 +206,34 @@ contract Escrow {
           "In web3 you spend 20% of the time writing the smart contract, and 80% of the time doing the damn frontend!" <a href="https://youtu.be/Q9LC5bS0Ghw?t=372">Austin Griffith</a>
         </Col>
       </Row>
-    
+
+      <Row>
+        <Col className='about' xs={12} md={9} xl={{span: 8, offset: 1}}>
+          <h3>About</h3>
+          <p>The concept for this platform was created at ETHDenver BUIDL 2023. As builders and active members of the web3 community, we create products that solve our fellow builders' problems.</p>
+        </Col>
+        <Col className='team' xs={12} md={3} xl={2}>
+          <h3>Team</h3>
+          <p>
+            Greg Schwartz
+            <span>UX Design, Lead Developer</span>
+          </p>
+          <p>
+            David Fung
+            <span>Marketing, Pitching</span>
+          </p>
+          <p>
+            Brittney Wong
+            <span>Visual Design, Branding</span>
+          </p>
+          <p>
+            Luis Miguel
+            <span>Front-end Development</span>
+          </p>
+        </Col>
+      </Row>
+
+
       <Row>
       <Col className='newFormWrapper prettyBackground' xs={12}>
         <h2>Host My Contract</h2>
